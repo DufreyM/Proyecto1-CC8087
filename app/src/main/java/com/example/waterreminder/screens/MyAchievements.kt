@@ -75,6 +75,7 @@ fun Achievement(name: String, description: String) {
 
 @Composable
 fun MyAchievements(
+
     achievements: List<Pair<String, String>>
 ) {
     Surface(
@@ -105,9 +106,8 @@ fun MyAchievements(
     }
 }
 
-@Preview
 @Composable
-fun MyAchievementPreview() {
+fun MyAchievementsScreen(onAchievementsSelected: (Int) -> Unit) {
     val achievements = listOf(
         "PRIMER SORBO" to "POR REGISTRAR TU PRIMER VASO DE AGUA.",
         "HIDRATACIÓN PERFECTA" to "POR ALCANZAR EL OBJETIVO DIARIO DE AGUA POR 7 DÍAS CONSECUTIVOS.",

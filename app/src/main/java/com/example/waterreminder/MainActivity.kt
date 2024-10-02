@@ -24,8 +24,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxHeight
 import com.example.waterreminder.screens.MainScreen
 import com.example.waterreminder.screens.MascotaScreen
+import com.example.waterreminder.screens.MyAchievementsScreen
 import com.example.waterreminder.screens.ProfileScreen
 import com.example.waterreminder.screens.SplashScreen
+import com.example.waterreminder.screens.StatsScreen
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -47,6 +49,11 @@ fun MyApp() {
     var showProfile by remember { mutableStateOf(false) }
     var currentScreen by remember { mutableStateOf("main") }
     var mainMascota by remember { mutableIntStateOf(R.drawable.hipopotamo) }
+    val waterDayProgress by remember { mutableFloatStateOf(0.70f) }
+    val waterMonthProgress by remember { mutableFloatStateOf(0.95f) }
+    val activityDayProgress by remember { mutableFloatStateOf(0.50f) }
+    val activityMonthProgress by remember { mutableFloatStateOf(0.95f) }
+
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
@@ -70,6 +77,14 @@ fun MyApp() {
                 },
                 onSelectMascota = {
                     currentScreen = "mascota" // Nueva opción para la pantalla de mascotas
+                    scope.launch { drawerState.close() }
+                },
+                onSelectMyAchievements = {
+                    currentScreen = "mis logros"
+                    scope.launch { drawerState.close() }
+                },
+                onSelectMyStatistics = {
+                    currentScreen = "mis estadisticas"
                     scope.launch { drawerState.close() }
                 }
             )
@@ -111,6 +126,18 @@ fun MyApp() {
                             currentScreen = "main" // Regresar a la pantalla principal
                         }
                     }
+                    "mis logros" -> {
+                        MyAchievementsScreen { /*Acción para la selección de algún logro, sería que la gota de agua se pinte cuando se logre el objetivo. */
+                        }
+                    }
+                    "mis estadisticas" -> {
+                        StatsScreen(
+                            waterDayProgress = waterDayProgress,
+                            waterMonthProgress = waterMonthProgress,
+                            activityDayProgress = activityDayProgress,
+                            activityMonthProgress = activityMonthProgress
+                        )
+                    }
                     else -> {
                         MainScreen(
                             modifier = Modifier.padding(paddingValues),
@@ -125,7 +152,7 @@ fun MyApp() {
 }
 
 @Composable
-fun DrawerContent(onCloseDrawer: () -> Unit, onSelectMain: () -> Unit, onSelectProfile: () -> Unit, onSelectMascota: () -> Unit) {
+fun DrawerContent(onCloseDrawer: () -> Unit, onSelectMain: () -> Unit, onSelectProfile: () -> Unit, onSelectMascota: () -> Unit, onSelectMyAchievements: () -> Unit, onSelectMyStatistics: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxHeight()
@@ -165,14 +192,20 @@ fun DrawerContent(onCloseDrawer: () -> Unit, onSelectMain: () -> Unit, onSelectP
             fontSize = 18.sp,
             modifier = Modifier
                 .padding(vertical = 8.dp)
-                .clickable { /* Acción para Mis Estadísticas */ }
+                .clickable {
+                    onSelectMyStatistics()
+                    onCloseDrawer()
+                }
         )
         Text(
             text = "MIS LOGROS",
             fontSize = 18.sp,
             modifier = Modifier
                 .padding(vertical = 8.dp)
-                .clickable { /* Acción para Mis Logros */ }
+                .clickable {
+                    onSelectMyAchievements()
+                    onCloseDrawer()
+                }
         )
         Text(
             text = "CONFIGURACIÓN",
