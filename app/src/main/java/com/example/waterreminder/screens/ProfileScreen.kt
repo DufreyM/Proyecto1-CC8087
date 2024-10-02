@@ -1,6 +1,7 @@
 package com.example.waterreminder.screens
 
-import androidx.compose.foundation.Image
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -13,12 +14,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
+import coil.decode.ImageDecoderDecoder
+import coil.request.ImageRequest
 import com.example.waterreminder.R
 
+@RequiresApi(Build.VERSION_CODES.P)
 @Composable
 fun ProfileScreen(modifier: Modifier = Modifier, onBack: () -> Unit) {
     Column(
@@ -30,15 +35,14 @@ fun ProfileScreen(modifier: Modifier = Modifier, onBack: () -> Unit) {
     ) {
         Spacer(modifier = Modifier.height(40.dp))
 
-        // Imagen del perfil (Placeholder)
-        Image(
-            painter = painterResource(id = R.drawable.ic_profile),
-            contentDescription = "Profile Icon",
-            modifier = Modifier
-                .size(120.dp) //
-                .clip(CircleShape)
-                .background(Color(0xFFDAE8FC))
-                .padding(8.dp)
+        // Imagen del perfil (usando un GIF)
+        AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(R.drawable.imagenperfil)
+                .decoderFactory(ImageDecoderDecoder.Factory())
+                .build(),
+            contentDescription = "Splash GIF",
+            modifier = Modifier.size(200.dp)
         )
 
         Spacer(modifier = Modifier.height(16.dp))
