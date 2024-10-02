@@ -1,6 +1,5 @@
 package com.example.waterreminder.screens
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -25,7 +24,7 @@ fun MascotaScreen(onMascotaSelected: (Int) -> Unit) { // Cambiado a Int
         R.drawable.rana
     )
 
-    var selectedMascota by remember { mutableStateOf(-1) } // Cambiado a -1 para indicar sin selección
+    var selectedMascota by remember { mutableIntStateOf(-1) }
     var showDialog by remember { mutableStateOf(false) }
 
     // Diálogo de confirmación
@@ -37,8 +36,8 @@ fun MascotaScreen(onMascotaSelected: (Int) -> Unit) { // Cambiado a Int
             confirmButton = {
                 TextButton(
                     onClick = {
-                        if (selectedMascota != -1) { // Verifica que haya una selección
-                            onMascotaSelected(selectedMascota) // Notificar selección
+                        if (selectedMascota != -1) {
+                            onMascotaSelected(selectedMascota)
                         }
                         showDialog = false
                     }
@@ -67,8 +66,8 @@ fun MascotaScreen(onMascotaSelected: (Int) -> Unit) { // Cambiado a Int
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable {
-                        selectedMascota = mascota // Asigna el ID del recurso
-                        showDialog = true // Mostrar el diálogo
+                        selectedMascota = mascota
+                        showDialog = true
                     }
                     .padding(16.dp)
                     .background(Color.White)
@@ -76,9 +75,9 @@ fun MascotaScreen(onMascotaSelected: (Int) -> Unit) { // Cambiado a Int
                 contentAlignment = Alignment.Center
             ) {
                 AsyncImage(
-                    model = mascota, // Cargar la imagen de mascota
+                    model = mascota,
                     contentDescription = null,
-                    modifier = Modifier.size(100.dp) // Cambia el tamaño según tu necesidad
+                    modifier = Modifier.size(100.dp)
                 )
             }
         }

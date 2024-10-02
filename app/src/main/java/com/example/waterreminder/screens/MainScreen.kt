@@ -5,7 +5,6 @@ import androidx.annotation.RequiresApi
 import coil.compose.AsyncImage
 import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
-import com.example.waterreminder.R
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -27,7 +26,7 @@ import androidx.compose.ui.unit.sp
 fun MainScreen(
     modifier: Modifier = Modifier,
     onProfileClick: () -> Unit,
-    mascota: Int // Added mascota parameter
+    mascota: Int
 ) {
     Box(
         modifier = modifier
@@ -38,7 +37,7 @@ fun MainScreen(
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
-                    .data(mascota) // Use the mascota parameter for the image
+                    .data(mascota)
                     .decoderFactory(ImageDecoderDecoder.Factory())
                     .build(),
                 contentDescription = "Mascota GIF",

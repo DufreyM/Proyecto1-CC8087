@@ -47,7 +47,7 @@ fun ProfileScreen(modifier: Modifier = Modifier, onBack: () -> Unit) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Título de "Mi Perfil"
+        // Título
         Text(
             text = "Mi Perfil",
             fontSize = 24.sp,

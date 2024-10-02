@@ -20,13 +20,12 @@ import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
 import kotlinx.coroutines.delay
 
-// Asegúrate de que tienes la fuente en res/font/ y actualiza el nombre según sea necesario.
 val animatedFont = FontFamily(Font(R.font.letra1))
 
 @RequiresApi(Build.VERSION_CODES.P)
 @Composable
 fun SplashScreen() {
-    // Mantener la pantalla de splash durante 4 segundos
+
     LaunchedEffect(true) {
         delay(4000)
     }
@@ -38,11 +37,10 @@ fun SplashScreen() {
         contentAlignment = Alignment.Center
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            // Cargar el GIF usando Coil con soporte para animaciones
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
-                    .data(R.drawable.agua) // Reemplaza con tu archivo de GIF en res/drawable
-                    .decoderFactory(ImageDecoderDecoder.Factory()) // Activar soporte para GIF
+                    .data(R.drawable.agua)
+                    .decoderFactory(ImageDecoderDecoder.Factory())
                     .build(),
                 contentDescription = "Splash GIF",
                 modifier = Modifier.size(200.dp)
@@ -51,8 +49,8 @@ fun SplashScreen() {
             Text(
                 text = "WaterCare",
                 fontSize = 32.sp,
-                color = Color(0xFF008080), // Color del texto
-                fontFamily = animatedFont, // Aplica la fuente animada
+                color = Color(0xFF008080),
+                fontFamily = animatedFont,
                 modifier = Modifier.padding(8.dp)
             )
         }
