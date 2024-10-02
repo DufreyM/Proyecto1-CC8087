@@ -24,7 +24,11 @@ import androidx.compose.ui.unit.sp
 
 @RequiresApi(Build.VERSION_CODES.P)
 @Composable
-fun MainScreen(modifier: Modifier = Modifier, onProfileClick: () -> Unit) {
+fun MainScreen(
+    modifier: Modifier = Modifier,
+    onProfileClick: () -> Unit,
+    mascota: Int // Added mascota parameter
+) {
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -34,10 +38,10 @@ fun MainScreen(modifier: Modifier = Modifier, onProfileClick: () -> Unit) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
-                    .data(R.drawable.hipopotamo)
+                    .data(mascota) // Use the mascota parameter for the image
                     .decoderFactory(ImageDecoderDecoder.Factory())
                     .build(),
-                contentDescription = "Hipopotamo GIF",
+                contentDescription = "Mascota GIF",
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(300.dp)
@@ -56,6 +60,9 @@ fun MainScreen(modifier: Modifier = Modifier, onProfileClick: () -> Unit) {
             ) {
                 Text("Ingresar Bebida", fontSize = 16.sp)
             }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
         }
     }
 }

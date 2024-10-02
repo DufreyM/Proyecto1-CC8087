@@ -23,6 +23,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxHeight
 import com.example.waterreminder.screens.MainScreen
+import com.example.waterreminder.screens.MascotaScreen
 import com.example.waterreminder.screens.ProfileScreen
 import com.example.waterreminder.screens.SplashScreen
 import kotlinx.coroutines.delay
@@ -44,10 +45,11 @@ class MainActivity : ComponentActivity() {
 fun MyApp() {
     var showSplash by remember { mutableStateOf(true) }
     var showProfile by remember { mutableStateOf(false) }
+    var currentScreen by remember { mutableStateOf("main") }
+    var mainMascota by remember { mutableIntStateOf(R.drawable.hipopotamo) }
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
-    // Mostrar la pantalla de splash por un tiempo breve
     LaunchedEffect(Unit) {
         delay(2000) // Duración de la splash screen (2 segundos)
         showSplash = false
@@ -56,9 +58,21 @@ fun MyApp() {
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
-            DrawerContent {
-                scope.launch { drawerState.close() }
-            }
+            DrawerContent(
+                onCloseDrawer = { scope.launch { drawerState.close() } },
+                onSelectMain = {
+                    currentScreen = "main"
+                    scope.launch { drawerState.close() }
+                },
+                onSelectProfile = {
+                    currentScreen = "profile"
+                    scope.launch { drawerState.close() }
+                },
+                onSelectMascota = {
+                    currentScreen = "mascota" // Nueva opción para la pantalla de mascotas
+                    scope.launch { drawerState.close() }
+                }
+            )
         }
     ) {
         if (showSplash) {
@@ -67,7 +81,7 @@ fun MyApp() {
             Scaffold(
                 topBar = {
                     TopAppBar(
-                        title = { Text(if (showProfile) "Perfil" else "Principal") },
+                        title = { Text(if (showProfile) "Perfil" else if (currentScreen == "mascota") "Mascotas" else "Principal") },
                         navigationIcon = {
                             IconButton(onClick = { scope.launch { drawerState.open() } }) {
                                 Icon(
@@ -77,7 +91,7 @@ fun MyApp() {
                             }
                         },
                         actions = {
-                            IconButton(onClick = { showProfile = true }) {
+                            IconButton(onClick = { showProfile = true; currentScreen = "profile" }) {
                                 Icon(
                                     painter = painterResource(id = R.drawable.ic_profile),
                                     contentDescription = "Profile"
@@ -87,13 +101,23 @@ fun MyApp() {
                     )
                 }
             ) { paddingValues ->
-                if (showProfile) {
-                    ProfileScreen(Modifier.padding(paddingValues)) { showProfile = false }
-                } else {
-                    MainScreen(
-                        modifier = Modifier.padding(paddingValues),
-                        onProfileClick = { showProfile = true }
-                    )
+                when (currentScreen) {
+                    "profile" -> {
+                        ProfileScreen(Modifier.padding(paddingValues)) { showProfile = false; currentScreen = "main" }
+                    }
+                    "mascota" -> {
+                        MascotaScreen { selectedMascota ->
+                            mainMascota = selectedMascota // Actualiza la mascota principal
+                            currentScreen = "main" // Regresar a la pantalla principal
+                        }
+                    }
+                    else -> {
+                        MainScreen(
+                            modifier = Modifier.padding(paddingValues),
+                            onProfileClick = { showProfile = true; currentScreen = "profile" },
+                            mascota = mainMascota
+                        )
+                    }
                 }
             }
         }
@@ -101,7 +125,7 @@ fun MyApp() {
 }
 
 @Composable
-fun DrawerContent(onCloseDrawer: () -> Unit) {
+fun DrawerContent(onCloseDrawer: () -> Unit, onSelectMain: () -> Unit, onSelectProfile: () -> Unit, onSelectMascota: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxHeight()
@@ -114,14 +138,20 @@ fun DrawerContent(onCloseDrawer: () -> Unit) {
             fontWeight = FontWeight.Bold,
             modifier = Modifier
                 .padding(vertical = 8.dp)
-                .clickable { onCloseDrawer() }
+                .clickable {
+                    onSelectMain() // Cambia a la pantalla principal
+                    onCloseDrawer() // Cierra el menú
+                }
         )
         Text(
             text = "MASCOTA",
             fontSize = 18.sp,
             modifier = Modifier
                 .padding(vertical = 8.dp)
-                .clickable { /* Acción para mascota */ }
+                .clickable {
+                    onSelectMascota() // Cambia a la pantalla de mascotas
+                    onCloseDrawer() // Cierra el menú
+                }
         )
         Text(
             text = "HISTORIAL",
