@@ -60,8 +60,19 @@ fun MainScreen(
                 Text("Ingresar Bebida", fontSize = 16.sp)
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(5.dp))
 
+            // Botón de "Tomar Agua"
+            Button(
+                onClick = { /* ACCION */ },
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxWidth(0.7f)
+                    .clip(CircleShape)
+                    .shadow(8.dp)
+            ) {
+                Text("Tomar agua", fontSize = 16.sp)
+            }
         }
     }
 }
