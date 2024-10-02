@@ -24,20 +24,20 @@ fun ProfileScreen(modifier: Modifier = Modifier, onBack: () -> Unit) {
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(Color(0xFFEAF2F8)), // Color de fondo similar al de la imagen
+            .background(Color(0xFFEAF2F8)),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
-        Spacer(modifier = Modifier.height(40.dp)) // Espacio superior
+        Spacer(modifier = Modifier.height(40.dp))
 
         // Imagen del perfil (Placeholder)
         Image(
             painter = painterResource(id = R.drawable.ic_profile),
             contentDescription = "Profile Icon",
             modifier = Modifier
-                .size(120.dp) // Tamaño de la imagen de perfil
+                .size(120.dp) //
                 .clip(CircleShape)
-                .background(Color(0xFFDAE8FC)) // Fondo azul claro para la imagen
+                .background(Color(0xFFDAE8FC))
                 .padding(8.dp)
         )
 

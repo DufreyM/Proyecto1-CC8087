@@ -1,6 +1,11 @@
 package com.example.waterreminder.screens
 
-import androidx.compose.foundation.Image
+import android.os.Build
+import androidx.annotation.RequiresApi
+import coil.compose.AsyncImage
+import coil.decode.ImageDecoderDecoder
+import coil.request.ImageRequest
+import com.example.waterreminder.R
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -13,12 +18,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.waterreminder.R
 
+@RequiresApi(Build.VERSION_CODES.P)
 @Composable
 fun MainScreen(modifier: Modifier = Modifier, onProfileClick: () -> Unit) {
     Box(
@@ -28,19 +32,22 @@ fun MainScreen(modifier: Modifier = Modifier, onProfileClick: () -> Unit) {
         contentAlignment = Alignment.Center
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Image(
-                painter = painterResource(id = R.drawable.octopus),
-                contentDescription = "Octopus",
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(R.drawable.hipopotamo)
+                    .decoderFactory(ImageDecoderDecoder.Factory())
+                    .build(),
+                contentDescription = "Hipopotamo GIF",
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(300.dp),
-                contentScale = ContentScale.Crop
+                    .height(300.dp)
             )
+
             Spacer(modifier = Modifier.height(16.dp))
 
             // Botón de "Ingresar Bebida"
             Button(
-                onClick = { /* No realiza ninguna acción por ahora */ },
+                onClick = { /* ACCION */ },
                 modifier = Modifier
                     .padding(16.dp)
                     .fillMaxWidth(0.7f)
