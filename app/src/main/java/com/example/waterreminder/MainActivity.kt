@@ -21,6 +21,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxHeight
 import com.example.waterreminder.screens.MainScreen
+import com.example.waterreminder.screens.ProfileScreen
+import com.example.waterreminder.screens.SplashScreen
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -35,8 +38,16 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyApp() {
+    var showSplash by remember { mutableStateOf(true) }
+    var showProfile by remember { mutableStateOf(false) }
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+
+    // Mostrar la pantalla de splash por un tiempo breve
+    LaunchedEffect(Unit) {
+        delay(2000) // Duración de la splash screen (2 segundos)
+        showSplash = false
+    }
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -46,30 +57,41 @@ fun MyApp() {
             }
         }
     ) {
-        Scaffold(
-            topBar = {
-                TopAppBar(
-                    title = { Text("Principal") },
-                    navigationIcon = {
-                        IconButton(onClick = { scope.launch { drawerState.open() } }) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_menu),
-                                contentDescription = "Menu"
-                            )
+        if (showSplash) {
+            SplashScreen()
+        } else {
+            Scaffold(
+                topBar = {
+                    TopAppBar(
+                        title = { Text(if (showProfile) "Perfil" else "Principal") },
+                        navigationIcon = {
+                            IconButton(onClick = { scope.launch { drawerState.open() } }) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_menu),
+                                    contentDescription = "Menu"
+                                )
+                            }
+                        },
+                        actions = {
+                            IconButton(onClick = { showProfile = true }) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_profile),
+                                    contentDescription = "Profile"
+                                )
+                            }
                         }
-                    },
-                    actions = {
-                        IconButton(onClick = { /* User Profile Action */ }) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_profile),
-                                contentDescription = "Profile"
-                            )
-                        }
-                    }
-                )
+                    )
+                }
+            ) { paddingValues ->
+                if (showProfile) {
+                    ProfileScreen(Modifier.padding(paddingValues)) { showProfile = false }
+                } else {
+                    MainScreen(
+                        modifier = Modifier.padding(paddingValues),
+                        onProfileClick = { showProfile = true }
+                    )
+                }
             }
-        ) { paddingValues ->
-            MainScreen(Modifier.padding(paddingValues))
         }
     }
 }
@@ -79,7 +101,7 @@ fun DrawerContent(onCloseDrawer: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxHeight()
-            .background(Color(0xFFB0C4DE)) // Color de fondo del menú
+            .background(Color(0xFFB0C4DE))
             .padding(16.dp)
     ) {
         Text(
@@ -89,6 +111,13 @@ fun DrawerContent(onCloseDrawer: () -> Unit) {
             modifier = Modifier
                 .padding(vertical = 8.dp)
                 .clickable { onCloseDrawer() }
+        )
+        Text(
+            text = "MASCOTA",
+            fontSize = 18.sp,
+            modifier = Modifier
+                .padding(vertical = 8.dp)
+                .clickable { /* Acción para mascota */ }
         )
         Text(
             text = "HISTORIAL",
