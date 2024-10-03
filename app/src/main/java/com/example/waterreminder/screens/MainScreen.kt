@@ -57,7 +57,7 @@ fun MainScreen(
                     .clip(CircleShape)
                     .shadow(8.dp)
             ) {
-                Text("Ingresar Bebida", fontSize = 16.sp)
+                Text("Ingresar Bebida", fontSize = 16.sp)// Texto
             }
 
             Spacer(modifier = Modifier.height(5.dp))
