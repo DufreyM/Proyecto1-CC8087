@@ -33,7 +33,7 @@ fun StatsScreen(
     ) {
         Spacer(modifier = Modifier.height(60.dp))
         Text(
-            text = "Estadísticas",
+            text = "Estadísticas",//Titulo
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(bottom = 16.dp),
@@ -133,6 +133,7 @@ fun ProgressCircle(
                 color = Color(0xFF007ACC)
             )
         }
+
         Text(
             text = label,
             fontSize = 14.sp,
