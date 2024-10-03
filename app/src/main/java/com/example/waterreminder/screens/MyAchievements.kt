@@ -33,6 +33,7 @@ fun Achievement(name: String, description: String) {
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
+
                 Icon(
                     painter = painterResource(id = R.drawable.ic_waterdroplet),
                     contentDescription = "Water Droplet",
