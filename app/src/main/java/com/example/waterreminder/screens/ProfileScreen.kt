@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun MiPerfilScreen() {
+fun ProfileScreen() {
     // Background color for the screen
     Box(
         modifier = Modifier
@@ -105,5 +105,5 @@ fun MiPerfilScreen() {
 @Preview(showBackground = true)
 @Composable
 fun PreviewMiPerfilScreen() {
-    MiPerfilScreen()
+    ProfileScreen()
 }
