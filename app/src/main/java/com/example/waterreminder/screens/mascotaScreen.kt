@@ -1,5 +1,4 @@
 package com.example.waterreminder.screens
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -23,7 +22,6 @@ fun MascotaScreen(onMascotaSelected: (Int) -> Unit) { // Cambiado a Int
         R.drawable.loro,
         R.drawable.rana
     )
-
     var selectedMascota by remember { mutableIntStateOf(-1) }
     var showDialog by remember { mutableStateOf(false) }
 
@@ -52,7 +50,6 @@ fun MascotaScreen(onMascotaSelected: (Int) -> Unit) { // Cambiado a Int
             }
         )
     }
-
     // Contenido de la pantalla
     LazyColumn(
         modifier = Modifier
