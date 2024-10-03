@@ -71,10 +71,6 @@ fun MyApp() {
                     currentScreen = "main"
                     scope.launch { drawerState.close() }
                 },
-                onSelectProfile = {
-                    currentScreen = "profile"
-                    scope.launch { drawerState.close() }
-                },
                 onSelectMascota = {
                     currentScreen = "mascota" // Nueva opción para la pantalla de mascotas
                     scope.launch { drawerState.close() }
@@ -152,7 +148,13 @@ fun MyApp() {
 }
 
 @Composable
-fun DrawerContent(onCloseDrawer: () -> Unit, onSelectMain: () -> Unit, onSelectProfile: () -> Unit, onSelectMascota: () -> Unit, onSelectMyAchievements: () -> Unit, onSelectMyStatistics: () -> Unit) {
+fun DrawerContent(
+    onCloseDrawer: () -> Unit,
+    onSelectMain: () -> Unit,
+    onSelectMascota: () -> Unit,
+    onSelectMyAchievements: () -> Unit,
+    onSelectMyStatistics: () -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxHeight()
@@ -181,13 +183,6 @@ fun DrawerContent(onCloseDrawer: () -> Unit, onSelectMain: () -> Unit, onSelectP
                 }
         )
         Text(
-            text = "HISTORIAL",
-            fontSize = 18.sp,
-            modifier = Modifier
-                .padding(vertical = 8.dp)
-                .clickable { /* Acción para ir a Historial */ }
-        )
-        Text(
             text = "MIS ESTADÍSTICAS",
             fontSize = 18.sp,
             modifier = Modifier
@@ -206,13 +201,6 @@ fun DrawerContent(onCloseDrawer: () -> Unit, onSelectMain: () -> Unit, onSelectP
                     onSelectMyAchievements()
                     onCloseDrawer()
                 }
-        )
-        Text(
-            text = "CONFIGURACIÓN",
-            fontSize = 18.sp,
-            modifier = Modifier
-                .padding(vertical = 8.dp)
-                .clickable { /* Acción para Configuración */ }
         )
     }
 }

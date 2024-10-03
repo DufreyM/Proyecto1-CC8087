@@ -1,58 +1,67 @@
 package com.example.waterreminder.screens
 
-import android.os.Build
-import androidx.annotation.RequiresApi
-import androidx.compose.ui.platform.LocalContext
-import com.example.waterreminder.R
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Icon
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
-import coil.decode.ImageDecoderDecoder
-import coil.request.ImageRequest
 import kotlinx.coroutines.delay
+import com.example.waterreminder.R
 
-val animatedFont = FontFamily(Font(R.font.letra1))
-
-@RequiresApi(Build.VERSION_CODES.P)
 @Composable
 fun SplashScreen() {
+    var startAnimation by remember { mutableStateOf(false) }
+    val alphaAnim = animateFloatAsState(
+        label = "splash animation",
+        targetValue = if(startAnimation) 1f else 0f,
+        animationSpec = tween(
+            durationMillis = 3000
+        )
+    )
 
-    LaunchedEffect(true) {
+    LaunchedEffect(key1 = true) {
+        startAnimation = true
         delay(4000)
     }
 
+    Splash(alpha = alphaAnim.value)
+}
+
+@Composable
+fun Splash(alpha: Float) {
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFFB0E0E6)), // Fondo azul claro
+        modifier = Modifier.fillMaxWidth(),
         contentAlignment = Alignment.Center
     ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(R.drawable.agua)
-                    .decoderFactory(ImageDecoderDecoder.Factory())
-                    .build(),
-                contentDescription = "Splash GIF",
-                modifier = Modifier.size(200.dp)
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = "WaterCare",
-                fontSize = 32.sp,
-                color = Color(0xFF008080),
-                fontFamily = animatedFont,
-                modifier = Modifier.padding(8.dp)
-            )
-        }
+        Image(
+            painterResource(id = R.drawable.splash_background),
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.fillMaxSize()
+        )
+        Icon(
+            painterResource(id = R.drawable.splash_title),
+            contentDescription = null,
+            modifier = Modifier
+                .size(250.dp)
+                .alpha(alpha = alpha),
+            tint = Color.White
+        )
     }
 }
