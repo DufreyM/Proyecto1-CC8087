@@ -97,7 +97,7 @@ fun ProfileScreen(modifier: Modifier = Modifier, onBack: () -> Unit) {
 fun ProfileOptionButton(text: String, onClick: () -> Unit) {
     Button(
         onClick = onClick,
-        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB0C4DE)),
+        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFB0C4DE)),//Cambio de color
         modifier = Modifier
             .padding(8.dp)
             .fillMaxWidth(0.8f)
