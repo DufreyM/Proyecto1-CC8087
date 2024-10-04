@@ -23,6 +23,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
 import com.example.waterreminder.screens.MainScreen
 import com.example.waterreminder.screens.MascotaScreen
 import com.example.waterreminder.screens.MyAchievementsScreen
@@ -96,8 +98,9 @@ fun MyApp() {
                         navigationIcon = {
                             IconButton(onClick = { scope.launch { drawerState.open() } }) {
                                 Icon(
-                                    painter = painterResource(id = R.drawable.ic_menu),
-                                    contentDescription = "Menu"
+                                    imageVector = Icons.Default.Menu,
+                                    contentDescription = "icono de menu",
+                                    tint = Color.Black
                                 )
                             }
                         },
