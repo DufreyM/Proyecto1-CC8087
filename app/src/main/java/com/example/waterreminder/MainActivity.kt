@@ -58,7 +58,7 @@ fun MyApp() {
     val scope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
-        delay(2000) // Duración de la splash screen (2 segundos)
+        delay(4000) // Duración de la splash screen (2 segundos)
         showSplash = false
     }
 
