@@ -16,7 +16,6 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.font.FontWeight
@@ -25,6 +24,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Person
 import com.example.waterreminder.screens.MainScreen
 import com.example.waterreminder.screens.MascotaScreen
 import com.example.waterreminder.screens.MyAchievementsScreen
@@ -107,8 +107,9 @@ fun MyApp() {
                         actions = {
                             IconButton(onClick = { showProfile = true; currentScreen = "profile" }) {
                                 Icon(
-                                    painter = painterResource(id = R.drawable.ic_profile),
-                                    contentDescription = "Profile"
+                                    imageVector = Icons.Default.Person,
+                                    contentDescription = "icono de perfil",
+                                    tint = Color.Black
                                 )
                             }
                         }
