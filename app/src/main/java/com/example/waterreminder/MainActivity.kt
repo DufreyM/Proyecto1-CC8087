@@ -1,6 +1,5 @@
 package com.example.waterreminder
 
-import ProfileScreen
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -28,6 +27,7 @@ import androidx.compose.material.icons.filled.Person
 import com.example.waterreminder.screens.MainScreen
 import com.example.waterreminder.screens.MascotaScreen
 import com.example.waterreminder.screens.MyAchievementsScreen
+import com.example.waterreminder.screens.ProfileScreen
 import com.example.waterreminder.screens.SplashScreen
 import com.example.waterreminder.screens.StatsScreen
 import kotlinx.coroutines.delay
@@ -141,7 +141,6 @@ fun MyApp() {
                     else -> {
                         MainScreen(
                             modifier = Modifier.padding(paddingValues),
-                            onProfileClick = { showProfile = true; currentScreen = "profile" },
                             mascota = mainMascota
                         )
                     }
