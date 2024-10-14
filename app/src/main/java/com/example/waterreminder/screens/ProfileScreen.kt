@@ -1,3 +1,5 @@
+package com.example.waterreminder.screens
+
 import com.example.waterreminder.R
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -38,16 +40,18 @@ fun ProfileScreen() {
                 contentDescription = "Avatar",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .size(150.dp)
-                    .padding(16.dp)
+                    .size(200.dp)
+                    .padding(15.dp)
                     .clip(shape = CircleShape)
 
             )
             // Profile Title
             Text(
                 text = "Mi Perfil",
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold
+                fontSize = 32.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.White,
+                modifier = Modifier.padding(bottom = 15.dp)
             )
 
             // Configurar Peso Button
@@ -57,7 +61,12 @@ fun ProfileScreen() {
                     .fillMaxWidth(0.8f)
                     .height(50.dp),
                 shape = RoundedCornerShape(10.dp),
-                colors = ButtonColors(containerColor = Color(0xFFFFC585), contentColor = Color.White, disabledContentColor = Color.White, disabledContainerColor = Color.Blue)
+                colors = ButtonColors(
+                    containerColor = Color(0xFF18C5C7),
+                    contentColor = Color.White,
+                    disabledContentColor = Color.White,
+                    disabledContainerColor = Color.Blue
+                )
             ) {
                 Text(text = "Configurar Peso", fontSize = 18.sp)
             }
@@ -69,7 +78,7 @@ fun ProfileScreen() {
                     .fillMaxWidth(0.8f)
                     .height(50.dp),
                 shape = RoundedCornerShape(10.dp),
-                colors = ButtonColors(containerColor = Color(0xFFFFC585), contentColor = Color.White, disabledContentColor = Color.White, disabledContainerColor = Color.Blue)
+                colors = ButtonColors(containerColor = Color(0xFF18C5C7), contentColor = Color.White, disabledContentColor = Color.White, disabledContainerColor = Color.Blue)
             ) {
                 Text(text = "Configurar Altura", fontSize = 18.sp)
             }
@@ -81,7 +90,7 @@ fun ProfileScreen() {
                     .fillMaxWidth(0.8f)
                     .height(50.dp),
                 shape = RoundedCornerShape(10.dp),
-                colors = ButtonColors(containerColor = Color(0xFFFFC585), contentColor = Color.White, disabledContentColor = Color.White, disabledContainerColor = Color.Blue)
+                colors = ButtonColors(containerColor = Color(0xFF18C5C7), contentColor = Color.White, disabledContentColor = Color.White, disabledContainerColor = Color.Blue)
             ) {
                 Text(text = "Configurar Actividad", fontSize = 18.sp)
             }
@@ -93,7 +102,7 @@ fun ProfileScreen() {
                     .fillMaxWidth(0.6f)
                     .height(50.dp),
                 shape = RoundedCornerShape(20.dp),
-                colors = ButtonColors(containerColor = Color(0xFFFFC585), contentColor = Color.White, disabledContentColor = Color.White, disabledContainerColor = Color.Blue)
+                colors = ButtonColors(containerColor = Color(0xFF18C5C7), contentColor = Color.White, disabledContentColor = Color.White, disabledContainerColor = Color.Blue)
 
             ) {
                 Text(text = "⚡ Calcular Meta", fontSize = 18.sp)

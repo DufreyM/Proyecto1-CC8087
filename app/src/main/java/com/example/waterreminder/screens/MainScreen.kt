@@ -9,6 +9,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -30,7 +31,7 @@ fun MainScreen(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(Brush.verticalGradient(listOf(Color.Cyan, Color.LightGray))),
+            .background(Brush.verticalGradient(listOf(Color(0xFF95E0E1), Color(0xFFFFEAC2)))),
         contentAlignment = Alignment.Center
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -54,7 +55,13 @@ fun MainScreen(
                     .padding(16.dp)
                     .fillMaxWidth(0.7f)
                     .clip(CircleShape)
-                    .shadow(8.dp)
+                    .shadow(8.dp),
+                colors = ButtonColors(
+                    containerColor = Color(0xFF18C5C7),
+                    contentColor = Color.White,
+                    disabledContentColor = Color.White,
+                    disabledContainerColor = Color.Blue
+                )
             ) {
                 Text("Ingresar Bebida", fontSize = 16.sp)
             }
@@ -68,7 +75,13 @@ fun MainScreen(
                     .padding(16.dp)
                     .fillMaxWidth(0.7f)
                     .clip(CircleShape)
-                    .shadow(8.dp)
+                    .shadow(8.dp),
+                colors = ButtonColors(
+                    containerColor = Color(0xFF18C5C7),
+                    contentColor = Color.White,
+                    disabledContentColor = Color.White,
+                    disabledContainerColor = Color.Blue
+                )
             ) {
                 Text("Tomar agua", fontSize = 16.sp)
             }

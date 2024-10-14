@@ -1,6 +1,5 @@
 package com.example.waterreminder
 
-import ProfileScreen
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -16,16 +15,19 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Person
 import com.example.waterreminder.screens.MainScreen
 import com.example.waterreminder.screens.MascotaScreen
 import com.example.waterreminder.screens.MyAchievementsScreen
+import com.example.waterreminder.screens.ProfileScreen
 import com.example.waterreminder.screens.SplashScreen
 import com.example.waterreminder.screens.StatsScreen
 import kotlinx.coroutines.delay
@@ -58,7 +60,7 @@ fun MyApp() {
     val scope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
-        delay(2000) // Duración de la splash screen (2 segundos)
+        delay(4000) // Duración de la splash screen (2 segundos)
         showSplash = false
     }
 
@@ -96,16 +98,18 @@ fun MyApp() {
                         navigationIcon = {
                             IconButton(onClick = { scope.launch { drawerState.open() } }) {
                                 Icon(
-                                    painter = painterResource(id = R.drawable.ic_menu),
-                                    contentDescription = "Menu"
+                                    imageVector = Icons.Default.Menu,
+                                    contentDescription = "icono de menu",
+                                    tint = Color.Black
                                 )
                             }
                         },
                         actions = {
                             IconButton(onClick = { showProfile = true; currentScreen = "profile" }) {
                                 Icon(
-                                    painter = painterResource(id = R.drawable.ic_profile),
-                                    contentDescription = "Profile"
+                                    imageVector = Icons.Default.Person,
+                                    contentDescription = "icono de perfil",
+                                    tint = Color.Black
                                 )
                             }
                         }
