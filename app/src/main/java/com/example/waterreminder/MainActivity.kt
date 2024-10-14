@@ -137,7 +137,6 @@ fun MyApp() {
                     else -> {
                         MainScreen(
                             modifier = Modifier.padding(paddingValues),
-                            onProfileClick = { showProfile = true; currentScreen = "profile" },
                             mascota = mainMascota
                         )
                     }

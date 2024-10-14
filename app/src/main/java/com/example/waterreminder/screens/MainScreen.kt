@@ -25,7 +25,6 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun MainScreen(
     modifier: Modifier = Modifier,
-    onProfileClick: () -> Unit,
     mascota: Int
 ) {
     Box(
