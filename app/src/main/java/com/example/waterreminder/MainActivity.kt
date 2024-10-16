@@ -1,5 +1,7 @@
 package com.example.waterreminder
 
+import LoginScreen
+import SignUpScreen
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -21,15 +23,25 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Person
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.waterreminder.screens.SignIn
 import com.example.waterreminder.screens.MainScreen
 import com.example.waterreminder.screens.MascotaScreen
 import com.example.waterreminder.screens.MyAchievementsScreen
 import com.example.waterreminder.screens.ProfileScreen
+import com.example.waterreminder.screens.Screen
+import com.example.waterreminder.screens.SignUp
 import com.example.waterreminder.screens.SplashScreen
 import com.example.waterreminder.screens.StatsScreen
+import com.example.waterreminder.viewmodel.AuthViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -38,10 +50,47 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            val navController = rememberNavController()
+            val authViewModel: AuthViewModel = viewModel()
+            // A surface container using the 'background' color from the theme
+            Surface(
+                modifier = Modifier.fillMaxSize(),
+                color = MaterialTheme.colorScheme.background
+            ) {
+                NavigationGraph(navController = navController, authViewModel = authViewModel)
+            }
             MyApp()
         }
     }
 }
+@Composable
+fun NavigationGraph(
+    navController: NavHostController,
+    authViewModel: AuthViewModel
+) {
+    NavHost(
+        navController = navController,
+        startDestination = Screen.SignupScreen.route
+    ) {
+        composable(Screen.SignupScreen.route) {
+            SignUpScreen(
+                authViewModel = authViewModel,
+                onNavigateToLogin = { navController.navigate(Screen.LoginScreen.route) }
+            )
+        }
+        composable(Screen.LoginScreen.route) {
+            LoginScreen(
+                authViewModel = authViewModel,
+                onNavigateToSignUp = {navController.navigate(Screen.SignupScreen.route)}
+            )
+        }
+        composable(Screen.ChatRoomsScreen.route) {
+        }
+        composable("${Screen.ChatScreen.route}/{roomId}") {
+        }
+    }
+    }
+
 
 @RequiresApi(Build.VERSION_CODES.P)
 @OptIn(ExperimentalMaterial3Api::class)
