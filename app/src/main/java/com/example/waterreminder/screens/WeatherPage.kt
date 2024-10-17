@@ -1,5 +1,6 @@
 package com.example.waterreminder.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -40,10 +41,12 @@ import com.example.waterreminder.api.NetworkResponse
 @Composable
 fun WeatherPage(viewModel: WeatherViewModel, onAchievementsSelected: (Int) -> Unit) {
 
+    // Estado para almacenar la ciudad ingresada por el usuario.
     var city by remember {
         mutableStateOf("")
     }
 
+    // Observa los resultados del clima en el viewModel.
     val weatherResult = viewModel.weatherResult.observeAsState()
 
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -51,37 +54,43 @@ fun WeatherPage(viewModel: WeatherViewModel, onAchievementsSelected: (Int) -> Un
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp),
+            .padding(8.dp)
+            .background(Color(0xFFE6F4F5)),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        // Barra de búsqueda.
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp),
+                .padding(8.dp)
+                .background(Color(0xFFE6F4F5)),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             OutlinedTextField(
-                modifier = Modifier.weight(1f).padding(40.dp),
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(40.dp)
+                    .background(Color.White),
                 value = city,
                 onValueChange = {
-                    city = it
+                    city = it // Actualizar el valor de la ciudad ingresada.
                 },
                 label = {
                     Text(text = "Buscar mi locación")
                 }
             )
             IconButton(onClick = {
-                viewModel.getData(city)
+                viewModel.getData(city) // LLama a Viewodel para buscar el clima de la ciudad.
                 keyboardController?.hide()
             }) {
                 Icon(imageVector = Icons.Default.Search,
                     contentDescription = "Buscar para cualquier locación"
                 )
             }
-
         }
 
+        // Mostrar los resultados del clima basados en el estado de la respuesta.
         when(val result = weatherResult.value){
             is NetworkResponse.Error -> {
                 Text(text = result.message)
@@ -95,7 +104,6 @@ fun WeatherPage(viewModel: WeatherViewModel, onAchievementsSelected: (Int) -> Un
             null -> {
             }
         }
-
     }
 }
 
@@ -105,12 +113,14 @@ fun WeatherDetails(data: WeatherModel) {
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp),
+            .padding(vertical = 8.dp)
+            .background(Color(0xFFE6F4F5)),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        // Elemento para mostrar la ubicación y el clima actual
         item {
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().background(Color(0xFFE6F4F5)),
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.Bottom
             ) {
@@ -119,14 +129,16 @@ fun WeatherDetails(data: WeatherModel) {
                     contentDescription = "Location icon",
                     modifier = Modifier.size(40.dp)
                 )
+                // Muestra el nombre de la ciudad
                 Text(text = data.location.name, fontSize = 30.sp)
                 Spacer(modifier = Modifier.width(8.dp))
+                // Muestra el país.
                 Text(text = data.location.country, fontSize = 18.sp, color = Color.Gray)
             }
 
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = " ${data.current.temp_c} °c",
+                text = " ${data.current.temp_c} °c", //Temperatura actual.
                 fontSize = 56.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center
@@ -145,12 +157,12 @@ fun WeatherDetails(data: WeatherModel) {
             )
 
             Spacer(modifier = Modifier.height(16.dp))
-            WeatherStatsCard(data = data)
+            WeatherStatsCard(data = data) // Mostrar más información acerca del clima.
         }
-
+        // Estadísticas adicionales del clima.
         item {
             Spacer(modifier = Modifier.height(24.dp))
-            HydrationRecommendations(data.current.temp_c)
+            HydrationRecommendations(data.current.temp_c) // Muestra las recomendaciones basadas en el criterio de temperatura.
         }
     }
 }
@@ -158,7 +170,7 @@ fun WeatherDetails(data: WeatherModel) {
 @Composable
 fun WeatherStatsCard(data: WeatherModel) {
     Card {
-        Column(modifier = Modifier.fillMaxWidth()) {
+        Column(modifier = Modifier.fillMaxWidth().background(Color(0xFF64B5F6))) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceAround
@@ -177,8 +189,9 @@ fun WeatherStatsCard(data: WeatherModel) {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceAround
             ) {
-                WeatherKeyVal("Local Time", data.location.localtime.split(" ")[1])  // Convert to string
-                WeatherKeyVal("Local Date", data.location.localtime.split(" ")[0])  // Convert to string
+                // Pasar a string la fecha y la hora
+                WeatherKeyVal("Local Time", data.location.localtime.split(" ")[1])
+                WeatherKeyVal("Local Date", data.location.localtime.split(" ")[0])
             }
         }
     }
@@ -222,7 +235,7 @@ fun WeatherKeyVal(key: String, value: Any) {
         modifier = Modifier.padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = value.toString(), fontSize = 24.sp, fontWeight = FontWeight.Bold)
-        Text(text = key, fontWeight = FontWeight.SemiBold, color = Color.Gray)
+        Text(text = value.toString(), fontSize = 24.sp, fontWeight = FontWeight.Bold, color = Color.White)
+        Text(text = key, fontWeight = FontWeight.SemiBold, color = Color.White)
     }
 }

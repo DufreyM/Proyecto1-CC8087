@@ -33,9 +33,10 @@ class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.P)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Se incia el viewModel que manejara los datos del clima para que interactúe con la API.
         val weatherViewModel = ViewModelProvider(this)[WeatherViewModel::class.java]
         setContent {
-            MyApp(weatherViewModel)
+            MyApp(weatherViewModel) // Se pasa el ViewModel para que esté disponible en la interfaz
         }
     }
 }
@@ -82,8 +83,9 @@ fun MyApp(weatherViewModel: WeatherViewModel) {
                     currentScreen = "mis estadisticas"
                     scope.launch { drawerState.close() }
                 },
+                // Mostrar la pantalla clima cuando el su
                 onSelectWeatherPage = {
-                    currentScreen = "clima"
+                    currentScreen = "clima" // Selección de la pantalla clima.
                     scope.launch { drawerState.close() }
                 }
             )
@@ -139,6 +141,9 @@ fun MyApp(weatherViewModel: WeatherViewModel) {
                             activityMonthProgress = activityMonthProgress
                         )
                     }
+                    // Cuando se selecciona la opción de clima, se muestra la pantalla WeatherPage.
+                    // Se pasa el weatherViewModel a la pantalla de clima para manejar las llamadas
+                    // y respuestas de la API de clima (WeatherAPI).
                     "clima" -> {
                         WeatherPage(weatherViewModel){
 
