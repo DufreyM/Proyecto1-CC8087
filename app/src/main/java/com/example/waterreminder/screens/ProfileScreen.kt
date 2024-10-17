@@ -6,9 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -93,6 +91,18 @@ fun ProfileScreen() {
                 colors = ButtonColors(containerColor = Color(0xFF18C5C7), contentColor = Color.White, disabledContentColor = Color.White, disabledContainerColor = Color.Blue)
             ) {
                 Text(text = "Configurar Actividad", fontSize = 18.sp)
+            }
+
+            // Configurar Ciudad Button
+            Button(
+                onClick = { /* No functionality */ },
+                modifier = Modifier
+                    .fillMaxWidth(0.8f)
+                    .height(50.dp),
+                shape = RoundedCornerShape(10.dp),
+                colors = ButtonColors(containerColor = Color(0xFF18C5C7), contentColor = Color.White, disabledContentColor = Color.White, disabledContainerColor = Color.Blue)
+            ) {
+                Text(text = "Configurar Ciudad", fontSize = 18.sp)
             }
 
             // Calcular Meta Button
