@@ -37,7 +37,7 @@ import com.example.waterreminder.api.WeatherModel
 import com.example.waterreminder.api.NetworkResponse
 
 @Composable
-fun WeatherPage(viewModel: WeatherViewModel) {
+fun WeatherPage(viewModel: WeatherViewModel, onAchievementsSelected: (Int) -> Unit) {
 
     var city by remember {
         mutableStateOf("")

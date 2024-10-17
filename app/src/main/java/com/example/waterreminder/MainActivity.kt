@@ -24,12 +24,8 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Person
-import com.example.waterreminder.screens.MainScreen
-import com.example.waterreminder.screens.MascotaScreen
-import com.example.waterreminder.screens.MyAchievementsScreen
-import com.example.waterreminder.screens.ProfileScreen
-import com.example.waterreminder.screens.SplashScreen
-import com.example.waterreminder.screens.StatsScreen
+import androidx.lifecycle.ViewModelProvider
+import com.example.waterreminder.screens.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -37,8 +33,9 @@ class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.P)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val weatherViewModel = ViewModelProvider(this)[WeatherViewModel::class.java]
         setContent {
-            MyApp()
+            MyApp(weatherViewModel)
         }
     }
 }
@@ -46,7 +43,7 @@ class MainActivity : ComponentActivity() {
 @RequiresApi(Build.VERSION_CODES.P)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyApp() {
+fun MyApp(weatherViewModel: WeatherViewModel) {
     var showSplash by remember { mutableStateOf(true) }
     var showProfile by remember { mutableStateOf(false) }
     var currentScreen by remember { mutableStateOf("main") }
@@ -83,6 +80,10 @@ fun MyApp() {
                 },
                 onSelectMyStatistics = {
                     currentScreen = "mis estadisticas"
+                    scope.launch { drawerState.close() }
+                },
+                onSelectWeatherPage = {
+                    currentScreen = "clima"
                     scope.launch { drawerState.close() }
                 }
             )
@@ -138,6 +139,11 @@ fun MyApp() {
                             activityMonthProgress = activityMonthProgress
                         )
                     }
+                    "clima" -> {
+                        WeatherPage(weatherViewModel){
+
+                        }
+                    }
                     else -> {
                         MainScreen(
                             modifier = Modifier.padding(paddingValues),
@@ -156,7 +162,8 @@ fun DrawerContent(
     onSelectMain: () -> Unit,
     onSelectMascota: () -> Unit,
     onSelectMyAchievements: () -> Unit,
-    onSelectMyStatistics: () -> Unit
+    onSelectMyStatistics: () -> Unit,
+    onSelectWeatherPage: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -202,6 +209,16 @@ fun DrawerContent(
                 .padding(vertical = 8.dp)
                 .clickable {
                     onSelectMyAchievements()
+                    onCloseDrawer()
+                }
+        )
+        Text(
+            text = "RECOMENDACIONES",
+            fontSize = 18.sp,
+            modifier = Modifier
+                .padding(vertical = 8.dp)
+                .clickable {
+                    onSelectWeatherPage()
                     onCloseDrawer()
                 }
         )

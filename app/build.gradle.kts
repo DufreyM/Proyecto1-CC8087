@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.waterreminder"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -50,6 +50,14 @@ android {
 }
 
 dependencies {
+    val retrofitVersion = "2.11.0"
+    implementation ("com.squareup.retrofit2:retrofit:$retrofitVersion")
+    implementation ("com.squareup.retrofit2:converter-gson:$retrofitVersion")
+
+    implementation("androidx.compose.runtime:runtime-livedata:1.6.6")
+    implementation("io.coil-kt:coil-compose:2.6.0")
+
+    implementation("androidx.compose.ui:ui:1.5.0")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
