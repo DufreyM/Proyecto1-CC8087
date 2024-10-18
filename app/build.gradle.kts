@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    id("com.google.devtools.ksp") version "1.9.0-1.0.12"
 }
 
 android {
@@ -48,33 +49,50 @@ android {
         }
     }
 }
-
 dependencies {
-    val retrofitVersion = "2.11.0"
-    implementation ("com.squareup.retrofit2:retrofit:$retrofitVersion")
-    implementation ("com.squareup.retrofit2:converter-gson:$retrofitVersion")
+    
+    // Retrofit for network calls
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
 
-    implementation("androidx.compose.runtime:runtime-livedata:1.6.6")
-    implementation("io.coil-kt:coil-compose:2.6.0")
+    // Coil for image loading
+    implementation(libs.coil.compose)
+    implementation(libs.coil.gif)
 
-    implementation("androidx.compose.ui:ui:1.5.0")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.0")
+    // Compose libraries
+    implementation(platform(libs.androidx.compose.bom)) // Compose BOM
+    implementation(libs.androidx.ui) // Componente principal de UI
+    implementation(libs.androidx.ui.graphics) // Gráficos
+    implementation(libs.androidx.ui.tooling.preview) // Herramientas de previsualización
+    implementation(libs.androidx.activity.compose) // Composable Activity
+    implementation(libs.androidx.lifecycle.viewmodel.compose) // ViewModel para Compose
+    implementation(libs.androidx.lifecycle.runtime.ktx) // Runtime de Lifecycle
 
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.activity.compose)
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.ui)
-    implementation(libs.androidx.ui.graphics)
-    implementation(libs.androidx.ui.tooling.preview)
+    // Material Design
     implementation(libs.androidx.material3)
+
+    // Navigation
+    implementation(libs.androidx.navigation.compose)
+
+    // Room dependencies
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.runtime.livedata)
+    implementation(libs.firebase.auth.ktx)
+    implementation(libs.firebase.firestore.ktx)
+    ksp(libs.androidx.room.compiler.v260alpha01) // Asegúrate de usar la última versión disponible
+
+    // Core AndroidX libraries
+    implementation(libs.androidx.core.ktx)
+
+    // Testing libraries
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
+
+    // Debug libraries
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    implementation(libs.coil.compose)
-    implementation(libs.coil.gif)
 }
