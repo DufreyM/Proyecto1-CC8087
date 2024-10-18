@@ -50,9 +50,12 @@ fun SignInScreen(navController: NavController, auth: FirebaseAuth) {
             auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
-                        navController.navigate("MainScreen") {
-                            // Limpia el stack de navegación
-                            popUpTo("SignIn") { inclusive = true }
+                        // Asegúrate de que auth.currentUser no es nulo
+                        if (auth.currentUser != null) {
+                            navController.navigate("Home") {
+                                // Limpia el stack de navegación
+                                popUpTo("SignIn") { inclusive = true }
+                            }
                         }
                     } else {
                         error = "Error: ${task.exception?.message}"
