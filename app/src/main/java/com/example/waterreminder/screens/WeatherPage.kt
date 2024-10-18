@@ -94,6 +94,7 @@ fun WeatherPage(viewModel: WeatherViewModel, onAchievementsSelected: (Int) -> Un
         when(val result = weatherResult.value){
             is NetworkResponse.Error -> {
                 Text(text = result.message)
+                viewModel.getOfflineData()
             }
             NetworkResponse.Loading -> {
                 CircularProgressIndicator()
@@ -200,11 +201,10 @@ fun WeatherStatsCard(data: WeatherModel) {
 
 @Composable
 fun HydrationRecommendations(tempC: String) {
-    val recommendations = when {
-        tempC < 15.0.toString() -> "El clima es frío. Asegúrate de beber al menos 1.5 a 2 litros de agua al día."
-        tempC.toDouble() in 15.0..25.0 -> "El clima es moderado. Bebe entre 2 y 2.5 litros de agua por día."
-        tempC > 25.0.toString() -> "El clima es cálido. Se recomienda beber entre 2.5 y 3 litros de agua o más."
-        else -> "Mantente hidratado según tu actividad física y necesidades."
+    val recommendations = when (tempC.toDoubleOrNull() ?: 0.0) {
+        in Double.MIN_VALUE..15.0 -> "El clima es frío. Asegúrate de beber al menos 1.5 a 2 litros de agua al día."
+        in 15.0..25.0 -> "El clima es moderado. Bebe entre 2 y 2.5 litros de agua por día."
+        else -> "El clima es cálido. Se recomienda beber entre 2.5 y 3 litros de agua o más."
     }
 
     Column(

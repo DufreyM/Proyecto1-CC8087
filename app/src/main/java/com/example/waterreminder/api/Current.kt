@@ -1,6 +1,11 @@
 package com.example.waterreminder.api
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity(tableName = "current_table")
 data class Current(
+    @PrimaryKey
     val cloud: String,
     val condition: Condition,
     val feelslike_c: String,

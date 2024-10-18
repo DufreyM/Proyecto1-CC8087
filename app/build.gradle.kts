@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    id("kotlin-kapt")
 }
 
 android {
@@ -51,6 +52,14 @@ android {
 
 dependencies {
     val retrofitVersion = "2.11.0"
+    val room_version = "2.6.1"
+
+    implementation("androidx.room:room-runtime:$room_version")
+    annotationProcessor("androidx.room:room-compiler:$room_version")
+
+    // To use Kotlin annotation processing tool (kapt)
+    kapt("androidx.room:room-compiler:$room_version")
+
     implementation ("com.squareup.retrofit2:retrofit:$retrofitVersion")
     implementation ("com.squareup.retrofit2:converter-gson:$retrofitVersion")
 
@@ -59,6 +68,8 @@ dependencies {
 
     implementation("androidx.compose.ui:ui:1.5.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.0")
+
+    implementation ("com.google.code.gson:gson:2.8.9")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
