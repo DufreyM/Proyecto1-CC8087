@@ -32,23 +32,19 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.waterreminder.screens.SignIn
-import com.example.waterreminder.screens.MainScreen
-import com.example.waterreminder.screens.MascotaScreen
-import com.example.waterreminder.screens.MyAchievementsScreen
-import com.example.waterreminder.screens.ProfileScreen
-import com.example.waterreminder.screens.Screen
-import com.example.waterreminder.screens.SignUp
-import com.example.waterreminder.screens.SplashScreen
-import com.example.waterreminder.screens.StatsScreen
 import com.example.waterreminder.viewmodel.AuthViewModel
+import androidx.lifecycle.ViewModelProvider
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import com.example.waterreminder.screens.*
 
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.P)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Se incia el viewModel que manejara los datos del clima para que interactúe con la API.
+        val weatherViewModel = ViewModelProvider(this)[WeatherViewModel::class.java]
         setContent {
             val navController = rememberNavController()
             val authViewModel: AuthViewModel = viewModel()
@@ -59,7 +55,7 @@ class MainActivity : ComponentActivity() {
             ) {
                 NavigationGraph(navController = navController, authViewModel = authViewModel)
             }
-            MyApp()
+            MyApp(weatherViewModel) // Se pasa el ViewModel para que esté disponible en la interfaz
         }
     }
 }
@@ -95,7 +91,7 @@ fun NavigationGraph(
 @RequiresApi(Build.VERSION_CODES.P)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyApp() {
+fun MyApp(weatherViewModel: WeatherViewModel) {
     var showSplash by remember { mutableStateOf(true) }
     var showProfile by remember { mutableStateOf(false) }
     var currentScreen by remember { mutableStateOf("main") }
@@ -132,6 +128,11 @@ fun MyApp() {
                 },
                 onSelectMyStatistics = {
                     currentScreen = "mis estadisticas"
+                    scope.launch { drawerState.close() }
+                },
+                // Mostrar la pantalla clima cuando el su
+                onSelectWeatherPage = {
+                    currentScreen = "clima" // Selección de la pantalla clima.
                     scope.launch { drawerState.close() }
                 }
             )
@@ -187,6 +188,11 @@ fun MyApp() {
                             activityMonthProgress = activityMonthProgress
                         )
                     }
+                    "clima" -> {
+                        WeatherPage(weatherViewModel){
+
+                        }
+                    }
                     else -> {
                         MainScreen(
                             modifier = Modifier.padding(paddingValues),
@@ -205,7 +211,8 @@ fun DrawerContent(
     onSelectMain: () -> Unit,
     onSelectMascota: () -> Unit,
     onSelectMyAchievements: () -> Unit,
-    onSelectMyStatistics: () -> Unit
+    onSelectMyStatistics: () -> Unit,
+    onSelectWeatherPage: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -251,6 +258,16 @@ fun DrawerContent(
                 .padding(vertical = 8.dp)
                 .clickable {
                     onSelectMyAchievements()
+                    onCloseDrawer()
+                }
+        )
+        Text(
+            text = "RECOMENDACIONES",
+            fontSize = 18.sp,
+            modifier = Modifier
+                .padding(vertical = 8.dp)
+                .clickable {
+                    onSelectWeatherPage()
                     onCloseDrawer()
                 }
         )
