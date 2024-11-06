@@ -59,10 +59,17 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
 @Composable
 fun NavigationGraph(
     navController: NavHostController,
-    authViewModel: AuthViewModel
+    authViewModel: AuthViewModel,
+    weatherViewModel: WeatherViewModel,
+    mainMascota: MutableState<Int>,
+    waterDayProgress: Float,
+    waterMonthProgress: Float,
+    activityDayProgress: Float,
+    activityMonthProgress: Float
 ) {
     NavHost(
         navController = navController,
@@ -77,35 +84,57 @@ fun NavigationGraph(
         composable(Screen.LoginScreen.route) {
             LoginScreen(
                 authViewModel = authViewModel,
-                onNavigateToSignUp = {navController.navigate(Screen.SignupScreen.route)}
+                onNavigateToSignUp = { navController.navigate(Screen.SignupScreen.route) }
             )
         }
-        composable(Screen.ChatRoomsScreen.route) {
+        composable(Screen.MainScreen.route) {
+            MainScreen(
+                modifier = Modifier,
+                mascota = mainMascota.value
+            )
         }
-        composable("${Screen.ChatScreen.route}/{roomId}") {
+        composable(Screen.ProfileScreen.route) {
+            ProfileScreen()
+        }
+        composable(Screen.MascotaScreen.route) {
+            MascotaScreen { selectedMascota ->
+                mainMascota.value = selectedMascota
+                navController.navigate(Screen.MainScreen.route)
+            }
+        }
+        composable(Screen.MyAchievementsScreen.route) {
+            MyAchievementsScreen()
+        }
+        composable(Screen.StatsScreen.route) {
+            StatsScreen(
+                waterDayProgress = waterDayProgress,
+                waterMonthProgress = waterMonthProgress,
+                activityDayProgress = activityDayProgress,
+                activityMonthProgress = activityMonthProgress
+            )
+        }
+        composable(Screen.WeatherPage.route) {
+            WeatherPage(weatherViewModel)
         }
     }
-    }
-
+}
 
 @RequiresApi(Build.VERSION_CODES.P)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyApp(weatherViewModel: WeatherViewModel) {
+fun MyApp(weatherViewModel: WeatherViewModel, navController: NavHostController) {
     var showSplash by remember { mutableStateOf(true) }
-    var showProfile by remember { mutableStateOf(false) }
-    var currentScreen by remember { mutableStateOf("main") }
-    var mainMascota by remember { mutableIntStateOf(R.drawable.hipopotamo) }
-    val waterDayProgress by remember { mutableFloatStateOf(0.70f) }
-    val waterMonthProgress by remember { mutableFloatStateOf(0.95f) }
-    val activityDayProgress by remember { mutableFloatStateOf(0.50f) }
-    val activityMonthProgress by remember { mutableFloatStateOf(0.95f) }
+    val mainMascota = remember { mutableStateOf(R.drawable.hipopotamo) }
+    val waterDayProgress = 0.70f
+    val waterMonthProgress = 0.95f
+    val activityDayProgress = 0.50f
+    val activityMonthProgress = 0.95f
 
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
-        delay(4000) // Duración de la splash screen (2 segundos)
+        delay(4000) // Duración de la splash screen
         showSplash = false
     }
 
@@ -114,27 +143,11 @@ fun MyApp(weatherViewModel: WeatherViewModel) {
         drawerContent = {
             DrawerContent(
                 onCloseDrawer = { scope.launch { drawerState.close() } },
-                onSelectMain = {
-                    currentScreen = "main"
-                    scope.launch { drawerState.close() }
-                },
-                onSelectMascota = {
-                    currentScreen = "mascota" // Nueva opción para la pantalla de mascotas
-                    scope.launch { drawerState.close() }
-                },
-                onSelectMyAchievements = {
-                    currentScreen = "mis logros"
-                    scope.launch { drawerState.close() }
-                },
-                onSelectMyStatistics = {
-                    currentScreen = "mis estadisticas"
-                    scope.launch { drawerState.close() }
-                },
-                // Mostrar la pantalla clima cuando el su
-                onSelectWeatherPage = {
-                    currentScreen = "clima" // Selección de la pantalla clima.
-                    scope.launch { drawerState.close() }
-                }
+                onSelectMain = { navController.navigate(Screen.MainScreen.route) },
+                onSelectMascota = { navController.navigate(Screen.MascotaScreen.route) },
+                onSelectMyAchievements = { navController.navigate(Screen.MyAchievementsScreen.route) },
+                onSelectMyStatistics = { navController.navigate(Screen.StatsScreen.route) },
+                onSelectWeatherPage = { navController.navigate(Screen.WeatherPage.route) }
             )
         }
     ) {
@@ -144,7 +157,7 @@ fun MyApp(weatherViewModel: WeatherViewModel) {
             Scaffold(
                 topBar = {
                     TopAppBar(
-                        title = { Text(if (showProfile) "Perfil" else if (currentScreen == "mascota") "Mascotas" else "Principal") },
+                        title = { Text("Water Reminder") },
                         navigationIcon = {
                             IconButton(onClick = { scope.launch { drawerState.open() } }) {
                                 Icon(
@@ -155,7 +168,7 @@ fun MyApp(weatherViewModel: WeatherViewModel) {
                             }
                         },
                         actions = {
-                            IconButton(onClick = { showProfile = true; currentScreen = "profile" }) {
+                            IconButton(onClick = { navController.navigate(Screen.ProfileScreen.route) }) {
                                 Icon(
                                     imageVector = Icons.Default.Person,
                                     contentDescription = "icono de perfil",
@@ -166,110 +179,17 @@ fun MyApp(weatherViewModel: WeatherViewModel) {
                     )
                 }
             ) { paddingValues ->
-                when (currentScreen) {
-                    "profile" -> {
-                        ProfileScreen()
-                    }
-                    "mascota" -> {
-                        MascotaScreen { selectedMascota ->
-                            mainMascota = selectedMascota // Actualiza la mascota principal
-                            currentScreen = "main" // Regresar a la pantalla principal
-                        }
-                    }
-                    "mis logros" -> {
-                        MyAchievementsScreen { /*Acción para la selección de algún logro, sería que la gota de agua se pinte cuando se logre el objetivo. */
-                        }
-                    }
-                    "mis estadisticas" -> {
-                        StatsScreen(
-                            waterDayProgress = waterDayProgress,
-                            waterMonthProgress = waterMonthProgress,
-                            activityDayProgress = activityDayProgress,
-                            activityMonthProgress = activityMonthProgress
-                        )
-                    }
-                    "clima" -> {
-                        WeatherPage(weatherViewModel){
-
-                        }
-                    }
-                    else -> {
-                        MainScreen(
-                            modifier = Modifier.padding(paddingValues),
-                            mascota = mainMascota
-                        )
-                    }
-                }
+                NavigationGraph(
+                    navController = navController,
+                    authViewModel = viewModel(),
+                    weatherViewModel = weatherViewModel,
+                    mainMascota = mainMascota,
+                    waterDayProgress = waterDayProgress,
+                    waterMonthProgress = waterMonthProgress,
+                    activityDayProgress = activityDayProgress,
+                    activityMonthProgress = activityMonthProgress
+                )
             }
         }
-    }
-}
-
-@Composable
-fun DrawerContent(
-    onCloseDrawer: () -> Unit,
-    onSelectMain: () -> Unit,
-    onSelectMascota: () -> Unit,
-    onSelectMyAchievements: () -> Unit,
-    onSelectMyStatistics: () -> Unit,
-    onSelectWeatherPage: () -> Unit
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxHeight()
-            .background(Color(0xFFB0C4DE))
-            .padding(16.dp)
-    ) {
-        Text(
-            text = "PRINCIPAL",
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier
-                .padding(vertical = 8.dp)
-                .clickable {
-                    onSelectMain() // Cambia a la pantalla principal
-                    onCloseDrawer() // Cierra el menú
-                }
-        )
-        Text(
-            text = "MASCOTA",
-            fontSize = 18.sp,
-            modifier = Modifier
-                .padding(vertical = 8.dp)
-                .clickable {
-                    onSelectMascota() // Cambia a la pantalla de mascotas
-                    onCloseDrawer() // Cierra el menú
-                }
-        )
-        Text(
-            text = "MIS ESTADÍSTICAS",
-            fontSize = 18.sp,
-            modifier = Modifier
-                .padding(vertical = 8.dp)
-                .clickable {
-                    onSelectMyStatistics()
-                    onCloseDrawer()
-                }
-        )
-        Text(
-            text = "MIS LOGROS",
-            fontSize = 18.sp,
-            modifier = Modifier
-                .padding(vertical = 8.dp)
-                .clickable {
-                    onSelectMyAchievements()
-                    onCloseDrawer()
-                }
-        )
-        Text(
-            text = "RECOMENDACIONES",
-            fontSize = 18.sp,
-            modifier = Modifier
-                .padding(vertical = 8.dp)
-                .clickable {
-                    onSelectWeatherPage()
-                    onCloseDrawer()
-                }
-        )
     }
 }
