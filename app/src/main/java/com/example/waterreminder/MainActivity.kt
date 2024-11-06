@@ -28,7 +28,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.waterreminder.screens.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.sql.Types.NULL
 
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.P)
@@ -54,6 +53,8 @@ fun MyApp(weatherViewModel: WeatherViewModel) {
     val waterMonthProgress by remember { mutableFloatStateOf(0.95f) }
     val activityDayProgress by remember { mutableFloatStateOf(0.50f) }
     val activityMonthProgress by remember { mutableFloatStateOf(0.95f) }
+    var selectedDrinkVolume by remember { mutableStateOf("100 mL") }
+
 
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -153,12 +154,20 @@ fun MyApp(weatherViewModel: WeatherViewModel) {
 
                         }
                     }
-                    "drinks" -> DrinksScreen()
+                    "drinks" -> {
+                        DrinksScreen(
+                            onDrinkSelected = { volume ->
+                                selectedDrinkVolume = volume.toString()
+                                currentScreen = "main" // Volver a la pantalla principal después de seleccionar
+                            }
+                        )
+                    }
                     else -> {
                         MainScreen(
                             modifier = Modifier.padding(paddingValues),
                             mascota = mainMascota,
-                            onIngresarBebidaClick = { currentScreen = "drinks" }
+                            onIngresarBebidaClick = { currentScreen = "drinks" },
+                            selectedDrinkVolume = selectedDrinkVolume // Muestra el volumen seleccionado en MainScreen
                         )
                     }
                 }

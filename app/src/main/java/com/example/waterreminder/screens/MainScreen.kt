@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -32,8 +33,11 @@ import androidx.compose.ui.unit.sp
 fun MainScreen(
     modifier: Modifier = Modifier,
     mascota: Int,
-    onIngresarBebidaClick: () -> Unit // Función para cambiar a la pantalla de bebidas
+    selectedDrinkVolume: String,
+    onIngresarBebidaClick: () -> Unit
 ) {
+    var waterConsumed by remember { mutableIntStateOf(0) }
+    val numericVolume = selectedDrinkVolume.replace(" mL", "").toIntOrNull() ?: 0
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -56,7 +60,7 @@ fun MainScreen(
 
             // Botón de "Ingresar Bebida"
             Button(
-                onClick = onIngresarBebidaClick, // Llama a la función para cambiar de pantalla
+                onClick = onIngresarBebidaClick,
                 modifier = Modifier
                     .padding(16.dp)
                     .fillMaxWidth(0.7f)
@@ -65,8 +69,8 @@ fun MainScreen(
                 colors = ButtonColors(
                     containerColor = Color(0xFF18C5C7),
                     contentColor = Color.White,
-                    disabledContentColor = Color.White,
-                    disabledContainerColor = Color.Blue
+                    disabledContainerColor = Color.Blue,
+                    disabledContentColor = Color.LightGray
                 )
             ) {
                 Text("Ingresar Bebida", fontSize = 16.sp)
@@ -74,24 +78,22 @@ fun MainScreen(
 
             Spacer(modifier = Modifier.height(5.dp))
 
-            // Botón de "Tomar Agua"
-            var waterConsumed by remember { mutableIntStateOf(0) }
-
+            // Botón de "Tomar Agua" con volumen seleccionado
             Button(
-                onClick = { waterConsumed += 100 }, // Aumenta en 100 mL el consumo de agua cada vez que se presiona
+                onClick = { waterConsumed += numericVolume },
                 modifier = Modifier
                     .padding(16.dp)
                     .fillMaxWidth(0.7f)
                     .clip(CircleShape)
                     .shadow(8.dp),
-                colors = ButtonColors(
+                colors = ButtonDefaults.buttonColors(
                     containerColor = Color(0xFF18C5C7),
                     contentColor = Color.White,
-                    disabledContentColor = Color.White,
-                    disabledContainerColor = Color.Blue
+                    disabledContainerColor = Color.Blue,
+                    disabledContentColor = Color.Red
                 )
             ) {
-                Text("Tomar agua", fontSize = 16.sp)
+                Text(text = "Tomar Agua")
             }
 
             Text(

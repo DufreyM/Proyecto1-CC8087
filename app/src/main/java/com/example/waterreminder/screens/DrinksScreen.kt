@@ -2,6 +2,7 @@ package com.example.waterreminder.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -26,24 +27,23 @@ import androidx.compose.ui.unit.sp
 import com.example.waterreminder.R
 
 @Composable
-fun DrinksScreen() {
+fun DrinksScreen(onDrinkSelected: (Int) -> Unit) {
     // Lista de bebidas con sus propiedades
     val drinks = listOf(
-        Drink("Agua", "100 mL", R.drawable.water_icon),
-        Drink("Soda", "500 mL", R.drawable.soda_icon),
-        Drink("Café", "250 mL", R.drawable.coffee_icon),
-        Drink("Agua", "250 mL", R.drawable.water_icon),
-        Drink("Agua", "500 mL", R.drawable.water_icon),
-        Drink("Agua", "100 mL", R.drawable.water_icon),
-        Drink("Jugo de Naranja", "200 mL", R.drawable.orange_juice_icon),
-        Drink("Café", "250 mL", R.drawable.coffee_icon)
+        Drink("Agua", "100 mL", R.drawable.water_icon, 100),
+        Drink("Soda", "500 mL", R.drawable.soda_icon, 500),
+        Drink("Café", "250 mL", R.drawable.coffee_icon, 250),
+        Drink("Agua", "250 mL", R.drawable.water_icon, 250),
+        Drink("Agua", "500 mL", R.drawable.water_icon, 500),
+        Drink("Agua", "100 mL", R.drawable.water_icon, 100),
+        Drink("Jugo de Naranja", "200 mL", R.drawable.orange_juice_icon, 200),
+        Drink("Café", "250 mL", R.drawable.coffee_icon, 250)
     )
 
-    // Fondo y estructura en columnas
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFD8E7F3)) // Color de fondo similar al de la imagen
+            .background(Color(0xFFD8E7F3))
             .padding(16.dp)
     ) {
         LazyVerticalGrid(
@@ -53,19 +53,20 @@ fun DrinksScreen() {
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(drinks.size) { index ->
-                DrinkCard(drinks[index])
+                DrinkCard(drink = drinks[index], onDrinkClick = { onDrinkSelected(drinks[index].volumeInMl) })
             }
         }
     }
 }
 
 @Composable
-fun DrinkCard(drink: Drink) {
+fun DrinkCard(drink: Drink, onDrinkClick: () -> Unit) {
     Column(
         modifier = Modifier
             .background(Color.White, shape = RoundedCornerShape(8.dp))
             .padding(16.dp)
             .fillMaxWidth()
+            .clickable { onDrinkClick() } // Detecta clic en la tarjeta de bebida
     ) {
         Image(
             painter = painterResource(id = drink.icon),
@@ -90,5 +91,5 @@ fun DrinkCard(drink: Drink) {
     }
 }
 
-// Clase de datos para representar cada bebida
-data class Drink(val name: String, val volume: String, val icon: Int)
+// Modificar la clase de datos para incluir el volumen en ml como un Int
+data class Drink(val name: String, val volume: String, val icon: Int, val volumeInMl: Int)
