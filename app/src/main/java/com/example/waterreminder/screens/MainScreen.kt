@@ -12,6 +12,10 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -19,6 +23,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -26,7 +31,8 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun MainScreen(
     modifier: Modifier = Modifier,
-    mascota: Int
+    mascota: Int,
+    onIngresarBebidaClick: () -> Unit // Función para cambiar a la pantalla de bebidas
 ) {
     Box(
         modifier = modifier
@@ -50,7 +56,7 @@ fun MainScreen(
 
             // Botón de "Ingresar Bebida"
             Button(
-                onClick = { /* ACCION */ },
+                onClick = onIngresarBebidaClick, // Llama a la función para cambiar de pantalla
                 modifier = Modifier
                     .padding(16.dp)
                     .fillMaxWidth(0.7f)
@@ -69,8 +75,10 @@ fun MainScreen(
             Spacer(modifier = Modifier.height(5.dp))
 
             // Botón de "Tomar Agua"
+            var waterConsumed by remember { mutableIntStateOf(0) }
+
             Button(
-                onClick = { /* ACCION */ },
+                onClick = { waterConsumed += 100 }, // Aumenta en 100 mL el consumo de agua cada vez que se presiona
                 modifier = Modifier
                     .padding(16.dp)
                     .fillMaxWidth(0.7f)
@@ -85,6 +93,13 @@ fun MainScreen(
             ) {
                 Text("Tomar agua", fontSize = 16.sp)
             }
+
+            Text(
+                text = "Agua consumida: $waterConsumed mL",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(8.dp)
+            )
         }
     }
 }

@@ -28,6 +28,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.waterreminder.screens.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.sql.Types.NULL
 
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.P)
@@ -131,6 +132,7 @@ fun MyApp(weatherViewModel: WeatherViewModel) {
                             currentScreen = "main" // Regresar a la pantalla principal
                         }
                     }
+
                     "mis logros" -> {
                         MyAchievementsScreen { /*Acción para la selección de algún logro, sería que la gota de agua se pinte cuando se logre el objetivo. */
                         }
@@ -151,13 +153,16 @@ fun MyApp(weatherViewModel: WeatherViewModel) {
 
                         }
                     }
+                    "drinks" -> DrinksScreen()
                     else -> {
                         MainScreen(
                             modifier = Modifier.padding(paddingValues),
-                            mascota = mainMascota
+                            mascota = mainMascota,
+                            onIngresarBebidaClick = { currentScreen = "drinks" }
                         )
                     }
                 }
+
             }
         }
     }
