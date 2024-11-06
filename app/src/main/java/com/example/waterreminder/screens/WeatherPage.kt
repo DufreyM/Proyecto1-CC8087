@@ -39,7 +39,7 @@ import com.example.waterreminder.api.WeatherModel
 import com.example.waterreminder.api.NetworkResponse
 
 @Composable
-fun WeatherPage(viewModel: WeatherViewModel, onAchievementsSelected: (Int) -> Unit) {
+fun WeatherPage(viewModel: WeatherViewModel, function: () -> Unit) {
 
     // Estado para almacenar la ciudad ingresada por el usuario.
     var city by remember {
@@ -48,7 +48,6 @@ fun WeatherPage(viewModel: WeatherViewModel, onAchievementsSelected: (Int) -> Un
 
     // Observa los resultados del clima en el viewModel.
     val weatherResult = viewModel.weatherResult.observeAsState()
-
     val keyboardController = LocalSoftwareKeyboardController.current
 
     Column(
@@ -91,9 +90,14 @@ fun WeatherPage(viewModel: WeatherViewModel, onAchievementsSelected: (Int) -> Un
         }
 
         // Mostrar los resultados del clima basados en el estado de la respuesta.
-        when(val result = weatherResult.value){
+        when (val result = weatherResult.value) {
             is NetworkResponse.Error -> {
-                Text(text = result.message)
+                Text(
+                    text = result.message ?: "Error al cargar el clima.",
+                    color = Color.Red,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(16.dp)
+                )
             }
             NetworkResponse.Loading -> {
                 CircularProgressIndicator()
@@ -185,14 +189,6 @@ fun WeatherStatsCard(data: WeatherModel) {
                 WeatherKeyVal("UV", data.current.uv)  // UV is a double/int
                 WeatherKeyVal("Precipitation", "${data.current.precip_mm} mm")  // Convert to string
             }
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceAround
-            ) {
-                // Pasar a string la fecha y la hora
-                WeatherKeyVal("Local Time", data.location.localtime.split(" ")[1])
-                WeatherKeyVal("Local Date", data.location.localtime.split(" ")[0])
-            }
         }
     }
 }
@@ -201,11 +197,12 @@ fun WeatherStatsCard(data: WeatherModel) {
 @Composable
 fun HydrationRecommendations(tempC: String) {
     val recommendations = when {
-        tempC < 15.0.toString() -> "El clima es frío. Asegúrate de beber al menos 1.5 a 2 litros de agua al día."
-        tempC.toDouble() in 15.0..25.0 -> "El clima es moderado. Bebe entre 2 y 2.5 litros de agua por día."
-        tempC > 25.0.toString() -> "El clima es cálido. Se recomienda beber entre 2.5 y 3 litros de agua o más."
+        tempC.toDoubleOrNull() ?: 0.0 < 15.0 -> "El clima es frío. Asegúrate de beber al menos 1.5 a 2 litros de agua al día."
+        tempC.toDoubleOrNull() ?: 0.0 in 15.0..25.0 -> "El clima es moderado. Bebe entre 2 y 2.5 litros de agua por día."
+        tempC.toDoubleOrNull() ?: 0.0 > 25.0 -> "El clima es cálido. Se recomienda beber entre 2.5 y 3 litros de agua o más."
         else -> "Mantente hidratado según tu actividad física y necesidades."
     }
+
 
     Column(
         modifier = Modifier

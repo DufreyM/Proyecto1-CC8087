@@ -1,5 +1,6 @@
 package com.example.waterreminder
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -11,7 +12,7 @@ interface WeatherDao {
     suspend fun insertWeather(weather: WeatherEntity)
 
     @Query("SELECT * FROM weather_table LIMIT 1")
-    suspend fun getWeather(): WeatherEntity?
+    fun getWeather(): WeatherEntity?
 
     @Query("SELECT * FROM weather_table WHERE name = :city LIMIT 1")
     suspend fun getWeatherByCity(city: String): WeatherEntity?
