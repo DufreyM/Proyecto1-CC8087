@@ -40,15 +40,8 @@ import com.example.waterreminder.api.NetworkResponse
 
 @Composable
 fun WeatherPage(viewModel: WeatherViewModel, function: () -> Unit) {
-
-    // Estado para almacenar la ciudad ingresada por el usuario.
-    var city by remember {
-        mutableStateOf("")
-    }
-
     // Observa los resultados del clima en el viewModel.
     val weatherResult = viewModel.weatherResult.observeAsState()
-    val keyboardController = LocalSoftwareKeyboardController.current
 
     Column(
         modifier = Modifier
@@ -57,39 +50,6 @@ fun WeatherPage(viewModel: WeatherViewModel, function: () -> Unit) {
             .background(Color(0xFFE6F4F5)),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Barra de búsqueda.
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp)
-                .background(Color(0xFFE6F4F5)),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            OutlinedTextField(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(40.dp)
-                    .background(Color.White),
-                value = city,
-                onValueChange = {
-                    city = it // Actualizar el valor de la ciudad ingresada.
-                },
-                label = {
-                    Text(text = "Buscar mi locación")
-                }
-            )
-            IconButton(onClick = {
-                viewModel.getData(city) // LLama a Viewodel para buscar el clima de la ciudad.
-                keyboardController?.hide()
-            }) {
-                Icon(imageVector = Icons.Default.Search,
-                    contentDescription = "Buscar para cualquier locación"
-                )
-            }
-        }
-
-        // Mostrar los resultados del clima basados en el estado de la respuesta.
         when (val result = weatherResult.value) {
             is NetworkResponse.Error -> {
                 Text(
@@ -99,13 +59,17 @@ fun WeatherPage(viewModel: WeatherViewModel, function: () -> Unit) {
                     modifier = Modifier.padding(16.dp)
                 )
             }
+
             NetworkResponse.Loading -> {
                 CircularProgressIndicator()
             }
+
             is NetworkResponse.Success -> {
                 WeatherDetails(data = result.data)
             }
+
             null -> {
+
             }
         }
     }

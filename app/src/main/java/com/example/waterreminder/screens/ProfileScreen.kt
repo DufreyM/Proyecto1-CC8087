@@ -6,33 +6,47 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.w3c.dom.Text
+
+
 
 @Composable
-fun ProfileScreen() {
-    // Background color for the screen
+fun ProfileScreen(viewModel: WeatherViewModel) {
+    var showCityInput by remember { mutableStateOf(false) }
+    var city by remember { mutableStateOf("") }
+    val keyboardController = LocalSoftwareKeyboardController.current
+
+    // Pantalla de perfil
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF95E0E1)), // light blue background
+            .background(Color(0xFF95E0E1)),
         contentAlignment = Alignment.Center
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // Profile Image (use your own image here)
+            // Aquí irá la foto de perfil del usuario
             Image(
                 painter = painterResource(id = R.drawable.profile_image), // Usa el nombre correcto de tu imagen
                 contentDescription = "Avatar",
@@ -95,7 +109,7 @@ fun ProfileScreen() {
 
             // Configurar Ciudad Button
             Button(
-                onClick = { /* No functionality */ },
+                onClick = { showCityInput = true },
                 modifier = Modifier
                     .fillMaxWidth(0.8f)
                     .height(50.dp),
@@ -103,6 +117,37 @@ fun ProfileScreen() {
                 colors = ButtonColors(containerColor = Color(0xFF18C5C7), contentColor = Color.White, disabledContentColor = Color.White, disabledContainerColor = Color.Blue)
             ) {
                 Text(text = "Configurar Ciudad", fontSize = 18.sp)
+            }
+
+            if (showCityInput) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(0.8f)
+                        .padding(vertical = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    OutlinedTextField(
+                        value = city,
+                        onValueChange = { city = it },
+                        label = { Text("Ingresar ciudad") },
+                        modifier = Modifier
+                            .weight(1f)
+                            .background(Color.White)
+                    )
+                    IconButton(
+                        onClick = {
+                            viewModel.getData(city)  // Llamada a la función de búsqueda en el ViewModel
+                            showCityInput = false    // Oculta el campo de entrada
+                            keyboardController?.hide() // Oculta el teclado
+                        }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Search,
+                            contentDescription = "Buscar"
+                        )
+                    }
+                }
             }
 
             // Calcular Meta Button
@@ -119,10 +164,4 @@ fun ProfileScreen() {
             }
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewMiPerfilScreen() {
-    ProfileScreen()
 }

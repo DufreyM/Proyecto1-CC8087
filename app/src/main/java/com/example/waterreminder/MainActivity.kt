@@ -121,7 +121,9 @@ fun MyApp(weatherViewModel: WeatherViewModel) {
             ) { paddingValues ->
                 when (currentScreen) {
                     "profile" -> {
-                        ProfileScreen()
+                        ProfileScreen(
+                            viewModel = weatherViewModel
+                        )
                     }
                     "mascota" -> {
                         MascotaScreen { selectedMascota ->
