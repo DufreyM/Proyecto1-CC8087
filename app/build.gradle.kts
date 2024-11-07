@@ -1,15 +1,16 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.google.gms.google.services)
 }
 
 android {
-    namespace = "com.example.waterreminder"
+    namespace = "uvg.edu.myapp"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.waterreminder"
-        minSdk = 26
+        applicationId = "uvg.edu.myapp"
+        minSdk = 24
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -50,14 +51,6 @@ android {
 }
 
 dependencies {
-    implementation (libs.retrofit)
-    implementation (libs.converter.gson)
-
-    implementation(libs.androidx.runtime.livedata)
-    implementation(libs.coil.compose.v260)
-
-    implementation(libs.ui)
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -67,9 +60,8 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.navigation.compose)
-    implementation(libs.firebase.firestore.ktx)
+    implementation(libs.firebase.auth)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -77,6 +69,4 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    implementation(libs.coil.compose)
-    implementation(libs.coil.gif)
 }

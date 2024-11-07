@@ -19,6 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "WaterReminder"
+rootProject.name = "MyApp"
 include(":app")
- 
