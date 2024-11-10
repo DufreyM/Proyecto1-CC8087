@@ -1,10 +1,14 @@
 package com.example.waterreminder.screens
 
+import android.util.Log
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -13,95 +17,68 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.example.waterreminder.R
 import com.example.waterreminder.api.WeatherModel
 import com.example.waterreminder.api.NetworkResponse
 
 @Composable
-fun WeatherPage(viewModel: WeatherViewModel, onAchievementsSelected: (Int) -> Unit) {
-
-    // Estado para almacenar la ciudad ingresada por el usuario.
-    var city by remember {
-        mutableStateOf("")
-    }
-
+fun WeatherPage(viewModel: WeatherViewModel) {
     // Observa los resultados del clima en el viewModel.
     val weatherResult = viewModel.weatherResult.observeAsState()
 
-    val keyboardController = LocalSoftwareKeyboardController.current
-
     Column(
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxSize()
             .padding(8.dp)
             .background(Color(0xFFE6F4F5)),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
-        // Barra de búsqueda.
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp)
-                .background(Color(0xFFE6F4F5)),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            OutlinedTextField(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(40.dp)
-                    .background(Color.White),
-                value = city,
-                onValueChange = {
-                    city = it // Actualizar el valor de la ciudad ingresada.
-                },
-                label = {
-                    Text(text = "Buscar mi locación")
-                }
-            )
-            IconButton(onClick = {
-                viewModel.getData(city) // LLama a Viewodel para buscar el clima de la ciudad.
-                keyboardController?.hide()
-            }) {
-                Icon(imageVector = Icons.Default.Search,
-                    contentDescription = "Buscar para cualquier locación"
+        when (val result = weatherResult.value) {
+            is NetworkResponse.Error -> {
+                Text(
+                    text = result.message,
+                    color = Color.Red,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(16.dp)
                 )
             }
-        }
 
-        // Mostrar los resultados del clima basados en el estado de la respuesta.
-        when(val result = weatherResult.value){
-            is NetworkResponse.Error -> {
-                Text(text = result.message)
-            }
             NetworkResponse.Loading -> {
                 CircularProgressIndicator()
             }
+
             is NetworkResponse.Success -> {
                 WeatherDetails(data = result.data)
             }
+
             null -> {
+                Box(
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.null_city_background),
+                        contentDescription = null,
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop
+                    )
+                }
             }
         }
     }
@@ -121,19 +98,27 @@ fun WeatherDetails(data: WeatherModel) {
         item {
             Row(
                 modifier = Modifier.fillMaxWidth().background(Color(0xFFE6F4F5)),
-                horizontalArrangement = Arrangement.Start,
-                verticalAlignment = Alignment.Bottom
+                horizontalArrangement = Arrangement.Center
             ) {
                 Icon(
                     imageVector = Icons.Default.LocationOn,
                     contentDescription = "Location icon",
-                    modifier = Modifier.size(40.dp)
+                    modifier = Modifier.size(40.dp).align(Alignment.CenterVertically)
                 )
                 // Muestra el nombre de la ciudad
-                Text(text = data.location.name, fontSize = 30.sp)
-                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = data.location.name,
+                    fontSize = 30.sp,
+                    modifier = Modifier.align(Alignment.CenterVertically)
+                )
+                Spacer(modifier = Modifier.width(10.dp))
                 // Muestra el país.
-                Text(text = data.location.country, fontSize = 18.sp, color = Color.Gray)
+                Text(
+                    text = data.location.country,
+                    fontSize = 18.sp,
+                    color = Color.Gray,
+                    modifier = Modifier.align(Alignment.Bottom)
+                )
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -185,14 +170,6 @@ fun WeatherStatsCard(data: WeatherModel) {
                 WeatherKeyVal("UV", data.current.uv)  // UV is a double/int
                 WeatherKeyVal("Precipitation", "${data.current.precip_mm} mm")  // Convert to string
             }
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceAround
-            ) {
-                // Pasar a string la fecha y la hora
-                WeatherKeyVal("Local Time", data.location.localtime.split(" ")[1])
-                WeatherKeyVal("Local Date", data.location.localtime.split(" ")[0])
-            }
         }
     }
 }
@@ -201,11 +178,12 @@ fun WeatherStatsCard(data: WeatherModel) {
 @Composable
 fun HydrationRecommendations(tempC: String) {
     val recommendations = when {
-        tempC < 15.0.toString() -> "El clima es frío. Asegúrate de beber al menos 1.5 a 2 litros de agua al día."
-        tempC.toDouble() in 15.0..25.0 -> "El clima es moderado. Bebe entre 2 y 2.5 litros de agua por día."
-        tempC > 25.0.toString() -> "El clima es cálido. Se recomienda beber entre 2.5 y 3 litros de agua o más."
+        (tempC.toDoubleOrNull() ?: 0.0) < 15.0 -> "El clima es frío. Asegúrate de beber al menos 1.5 a 2 litros de agua al día."
+        (tempC.toDoubleOrNull() ?: 0.0) in 15.0..25.0 -> "El clima es moderado. Bebe entre 2 y 2.5 litros de agua por día."
+        (tempC.toDoubleOrNull() ?: 0.0) > 25.0 -> "El clima es cálido. Se recomienda beber entre 2.5 y 3 litros de agua o más."
         else -> "Mantente hidratado según tu actividad física y necesidades."
     }
+
 
     Column(
         modifier = Modifier

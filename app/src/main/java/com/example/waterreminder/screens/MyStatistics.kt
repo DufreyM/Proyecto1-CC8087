@@ -10,7 +10,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.res.painterResource
@@ -121,10 +120,10 @@ fun ProgressCircle(
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Box(contentAlignment = Alignment.Center) {
             CircularProgressIndicator(
-                progress = progress,
-                strokeWidth = 8.dp,
+                progress = { progress },
                 modifier = Modifier.size(80.dp),
-                color = Color(0xFF007ACC)
+                color = Color(0xFF007ACC),
+                strokeWidth = 8.dp,
             )
             Text(
                 text = "${(progress * 100).toInt()}%",

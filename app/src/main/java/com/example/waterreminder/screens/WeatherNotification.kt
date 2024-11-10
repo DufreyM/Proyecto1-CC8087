@@ -1,7 +1,6 @@
 package com.example.waterreminder.screens
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -22,7 +21,7 @@ fun ClimaAlertaDialog(
 ) {
     Dialog(onDismissRequest = { onDismiss() }) {
         Box(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
                 .background(Color.White, shape = RoundedCornerShape(16.dp))

@@ -25,7 +25,9 @@ import kotlinx.coroutines.delay
 import com.example.waterreminder.R
 
 @Composable
-fun SplashScreen() {
+fun SplashScreen(
+    onEndAnimation: () -> Unit
+) {
     var startAnimation by remember { mutableStateOf(false) }
     val alphaAnim = animateFloatAsState(
         label = "splash animation",
@@ -38,6 +40,7 @@ fun SplashScreen() {
     LaunchedEffect(key1 = true) {
         startAnimation = true
         delay(4000)
+        onEndAnimation()
     }
 
     Splash(alpha = alphaAnim.value)

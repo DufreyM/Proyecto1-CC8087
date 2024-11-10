@@ -1,11 +1,13 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    id("com.google.devtools.ksp") version "1.9.0-1.0.12"
+    alias(libs.plugins.google.gms.google.services)
 }
 
 android {
     namespace = "com.example.waterreminder"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.waterreminder"
@@ -48,35 +50,53 @@ android {
         }
     }
 }
-
 dependencies {
-    implementation (libs.retrofit)
-    implementation (libs.converter.gson)
+    
+    // Retrofit for network calls
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
 
-    implementation(libs.androidx.runtime.livedata)
-    implementation(libs.coil.compose.v260)
+    // Coil for image loading
+    implementation(libs.coil.compose)
+    implementation(libs.coil.gif)
 
-    implementation(libs.ui)
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    // Compose libraries
+    implementation(platform(libs.androidx.compose.bom)) // Compose BOM
+    implementation(libs.androidx.ui) // Componente principal de UI
+    implementation(libs.androidx.ui.graphics) // Gráficos
+    implementation(libs.androidx.ui.tooling.preview) // Herramientas de previsualización
+    implementation(libs.androidx.activity.compose) // Composable Activity
+    implementation(libs.androidx.lifecycle.viewmodel.compose) // ViewModel para Compose
+    implementation(libs.androidx.lifecycle.runtime.ktx) // Runtime de Lifecycle
 
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.activity.compose)
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.ui)
-    implementation(libs.androidx.ui.graphics)
-    implementation(libs.androidx.ui.tooling.preview)
+    // Material Design
     implementation(libs.androidx.material3)
-    implementation(libs.androidx.navigation.runtime.ktx)
+
+    // Navigation
     implementation(libs.androidx.navigation.compose)
+
+    // Room dependencies
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.runtime.livedata)
+    implementation(libs.firebase.auth.ktx)
     implementation(libs.firebase.firestore.ktx)
+    implementation(libs.androidx.compose.material3)
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.firestore)
+    ksp(libs.androidx.room.compiler.v260alpha01) // Asegúrate de usar la última versión disponible
+
+    // Core AndroidX libraries
+    implementation(libs.androidx.core.ktx)
+
+    // Testing libraries
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
+
+    // Debug libraries
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-    implementation(libs.coil.compose)
-    implementation(libs.coil.gif)
 }
