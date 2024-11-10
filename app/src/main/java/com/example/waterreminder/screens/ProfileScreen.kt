@@ -34,6 +34,23 @@ import com.example.waterreminder.additionals.injection.MyApp
 import com.example.waterreminder.authentication.presentation.AuthViewModel
 
 @Composable
+fun GoalAlertDialog(isGoal: Boolean, goal: Int?, onDismiss: () -> Unit) {
+    if (isGoal) {
+        AlertDialog(
+            onDismissRequest = { onDismiss() },
+            title = { Text("Meta") },
+            text = { Text(  "Tu meta son $goal ml de agua") },
+            confirmButton = {
+                TextButton(onClick = { onDismiss() }) {
+                    Text("OK")
+                }
+            }
+        )
+    }
+}
+
+
+@Composable
 fun ProfileScreen(
     viewModel: WeatherViewModel,
     authViewModel: AuthViewModel = viewModel(
@@ -41,6 +58,16 @@ fun ProfileScreen(
     ),
     onSingOut: () -> Unit
 ) {
+    var showDialogWeight by remember { mutableStateOf(false) }
+    var showDialogHeight by remember { mutableStateOf(false) }
+    var isActivity by remember { mutableStateOf(false) }
+    val selectedColor = Color(0xFF009929)
+    val unselectedColor = Color(0xFF18C5C7)
+    var weight by remember { mutableStateOf("") }
+    var height by remember { mutableStateOf("") }
+    var isGoal by remember { mutableStateOf(false) }
+    var goal by remember { mutableStateOf(0) }
+
     var showCityInput by remember { mutableStateOf(false) }
     var city by remember { mutableStateOf("") }
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -127,7 +154,7 @@ fun ProfileScreen(
 
             // Configurar Peso Button
             Button(
-                onClick = { /* No functionality */ },
+                onClick = { showDialogWeight = true },
                 modifier = Modifier
                     .fillMaxWidth(0.8f)
                     .height(50.dp),
@@ -144,12 +171,12 @@ fun ProfileScreen(
 
             // Configurar Actividad Button
             Button(
-                onClick = { /* No functionality */ },
+                onClick = { isActivity = !isActivity },
                 modifier = Modifier
                     .fillMaxWidth(0.8f)
                     .height(50.dp),
                 shape = RoundedCornerShape(10.dp),
-                colors = ButtonColors(containerColor = Color(0xFF18C5C7), contentColor = Color.White, disabledContentColor = Color.White, disabledContainerColor = Color.Blue)
+                colors = ButtonColors(containerColor = if (isActivity) selectedColor else unselectedColor, contentColor = Color.White, disabledContentColor = Color.White, disabledContainerColor = Color.Blue)
             ) {
                 Text(text = "Configurar Actividad", fontSize = 18.sp)
             }
@@ -161,7 +188,7 @@ fun ProfileScreen(
                     .fillMaxWidth(0.8f)
                     .height(50.dp),
                 shape = RoundedCornerShape(10.dp),
-                colors = ButtonColors(containerColor = Color(0xFF18C5C7), contentColor = Color.White, disabledContentColor = Color.White, disabledContainerColor = Color.Blue)
+                colors = ButtonColors(containerColor = Color(0xFF18C5C7) , contentColor = Color.White, disabledContentColor = Color.White, disabledContainerColor = Color.Blue)
             ) {
                 Text(text = "Configurar Ciudad", fontSize = 18.sp)
             }
@@ -199,7 +226,14 @@ fun ProfileScreen(
 
             // Calcular Meta Button
             Button(
-                onClick = { /* No functionality */ },
+                onClick = {
+                    if (isActivity) {
+                    goal = (weight.toDouble() * 35 + 1000).toInt()
+                    isGoal = true
+                } else {
+                    goal = (weight.toDouble() * 35).toInt()
+                    isGoal = true
+                }},
                 modifier = Modifier
                     .fillMaxWidth(0.6f)
                     .height(50.dp),
@@ -226,4 +260,38 @@ fun ProfileScreen(
             }
         }
     }
+
+    if (showDialogWeight) {
+        AlertDialog(
+            onDismissRequest = { showDialogWeight = false },
+            title = { Text("Ingresa el peso") },
+            text = {
+                // Campo de texto para ingresar el dato
+                TextField(
+                    value = weight,
+                    onValueChange = { weight = it },
+                    placeholder = { Text("Escribe aquí") }
+                )
+            },
+            confirmButton = {
+                // Botón para confirmar y cerrar el diálogo
+                Button(onClick = {
+                    // Acción cuando se confirma
+                    showDialogWeight = false
+                    // Aquí puedes manejar el dato ingresado (en userInput)
+                }) {
+                    Text("Confirmar")
+                }
+            },
+            dismissButton = {
+                // Botón para cancelar y cerrar el diálogo
+                Button(onClick = { showDialogWeight = false }) {
+                    Text("Cancelar")
+                }
+            }
+        )
+    }
+
+    GoalAlertDialog(isGoal,goal,onDismiss = { isGoal = false })
+
 }
