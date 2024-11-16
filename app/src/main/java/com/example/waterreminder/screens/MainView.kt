@@ -42,6 +42,7 @@ fun MainView(
     val activityDayProgress by remember { mutableFloatStateOf(0.50f) }
     val activityMonthProgress by remember { mutableFloatStateOf(0.95f) }
     var selectedDrinkVolume by remember { mutableStateOf("100 mL") }
+    var waterConsumed by remember { mutableIntStateOf(0) }
 
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -89,8 +90,12 @@ fun MainView(
                 composable(route = "main") {
                     MainScreen(
                         mascota = mainMascota,
-                        onIngresarBebidaClick = { currentScreen = "drinks" },
-                        selectedDrinkVolume = selectedDrinkVolume
+                        selectedDrinkVolume = selectedDrinkVolume,
+                        waterConsumed = waterConsumed, // Pasar waterConsumed a MainScreen
+                        onIngresarBebidaClick = { mainNavController.navigate("drinks") },
+                        onConsumeWater = { volume ->
+                            waterConsumed += volume // Acumular agua consumida
+                        }
                     )
                 }
 
@@ -123,9 +128,9 @@ fun MainView(
                 }
 
                 composable(route = "drinks") {
-                    DrinksScreen{ volume ->
-                        selectedDrinkVolume = volume.toString()
-                        currentScreen = "drinks_screen"
+                    DrinksScreen { volume ->
+                        selectedDrinkVolume = "$volume mL"  // Actualizar el volumen seleccionado
+                        mainNavController.popBackStack()    // Volver a la pantalla principal
                     }
                 }
             }

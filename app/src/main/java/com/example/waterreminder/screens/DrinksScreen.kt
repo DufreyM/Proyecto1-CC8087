@@ -53,7 +53,12 @@ fun DrinksScreen(onDrinkSelected: (Int) -> Unit) {
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(drinks.size) { index ->
-                DrinkCard(drink = drinks[index], onDrinkClick = { onDrinkSelected(drinks[index].volumeInMl) })
+                DrinkCard(
+                    drink = drinks[index],
+                    onDrinkClick = {
+                        onDrinkSelected(drinks[index].volumeInMl)  // Seleccionar el volumen
+                    }
+                )
             }
         }
     }
@@ -63,10 +68,10 @@ fun DrinksScreen(onDrinkSelected: (Int) -> Unit) {
 fun DrinkCard(drink: Drink, onDrinkClick: () -> Unit) {
     Column(
         modifier = Modifier
-            .background(Color.White, shape = RoundedCornerShape(8.dp))
-            .padding(16.dp)
             .fillMaxWidth()
+            .background(Color.White, shape = RoundedCornerShape(8.dp))
             .clickable { onDrinkClick() } // Detecta clic en la tarjeta de bebida
+            .padding(16.dp)
     ) {
         Image(
             painter = painterResource(id = drink.icon),

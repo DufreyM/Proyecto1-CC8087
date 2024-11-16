@@ -36,9 +36,10 @@ fun MainScreen(
     modifier: Modifier = Modifier,
     mascota: Int,
     selectedDrinkVolume: String,
-    onIngresarBebidaClick: () -> Unit
+    waterConsumed: Int,
+    onIngresarBebidaClick: () -> Unit,
+    onConsumeWater: (Int) -> Unit
 ) {
-    var waterConsumed by remember { mutableIntStateOf(0) }
     val numericVolume = selectedDrinkVolume.replace(" mL", "").toIntOrNull() ?: 0
     val context = LocalContext.current
 
@@ -67,7 +68,6 @@ fun MainScreen(
                 model = ImageRequest.Builder(LocalContext.current)
                     .data(mascota)
                     .apply {
-                        // Choose ImageDecoderDecoder for API level 28+; otherwise, use GifDecoder
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                             decoderFactory(ImageDecoderDecoder.Factory())
                         } else {
@@ -106,10 +106,10 @@ fun MainScreen(
             // Botón de "Tomar Agua" con volumen seleccionado
             Button(
                 onClick = {
-                    waterConsumed += numericVolume
+                    onConsumeWater(numericVolume)  // Actualizar agua consumida en MainView
                     Toast.makeText(
                         context,
-                        "¡Genial!, has consumido: $waterConsumed mL",
+                        "¡Genial!, has consumido: $numericVolume mL",
                         Toast.LENGTH_SHORT
                     ).show()
 
