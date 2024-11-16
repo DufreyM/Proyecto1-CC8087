@@ -9,15 +9,18 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.waterreminder.achievements.*
 import com.example.waterreminder.R
 
 @Composable
-fun Achievement(name: String, description: String) {
+fun Achievement(name: String, description: String, unlocked: Boolean) {
+    val iconTint = if (unlocked) Color.White else Color.Gray
     var expanded by remember { mutableStateOf(false) }
 
     val extraPadding by animateDpAsState(
@@ -26,7 +29,7 @@ fun Achievement(name: String, description: String) {
     )
 
     Surface(
-        color = Color(0xFF64B5F6),
+        color = if (unlocked) Color(0xFF64B5F6) else Color.LightGray,
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp)
@@ -40,21 +43,21 @@ fun Achievement(name: String, description: String) {
                     modifier = Modifier
                         .padding(end = 8.dp)
                         .size(24.dp),
-                    tint = Color.White
+                    tint = iconTint
                 )
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = name,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color.White
+                        color = if (unlocked) Color.White else Color.Gray
                     )
                     if (expanded) {
                         Spacer(modifier = Modifier.height(extraPadding))
                         Text(
                             text = description,
                             fontSize = 14.sp,
-                            color = Color.White
+                            color = if (unlocked) Color.White else Color.Gray
                         )
                     }
                 }
@@ -66,7 +69,7 @@ fun Achievement(name: String, description: String) {
                             id = if (expanded) R.drawable.ic_drop_up else R.drawable.ic_drop_down
                         ),
                         contentDescription = if (expanded) "Mostrar menos" else "Mostrar más",
-                        tint = Color.White
+                        tint = iconTint
                     )
                 }
             }
@@ -76,8 +79,8 @@ fun Achievement(name: String, description: String) {
 
 @Composable
 fun MyAchievements(
-
-    achievements: List<Pair<String, String>>
+    achievements: List<Pair<String, String>>,
+    achievementStatus: (String) -> Boolean
 ) {
     Surface(
         color = Color(0xFFE6F4F5),
@@ -100,7 +103,8 @@ fun MyAchievements(
             LazyColumn {
                 items(achievements.size) { index ->
                     val (name, description) = achievements[index]
-                    Achievement(name = name, description = description)
+                    val unlocked = achievementStatus(name) // Llama a la función para verificar el logro
+                    Achievement(name = name, description = description, unlocked = unlocked)
                 }
             }
         }
@@ -109,6 +113,8 @@ fun MyAchievements(
 
 @Composable
 fun MyAchievementsScreen() {
+    val context = LocalContext.current
+
     val achievements = listOf(
         "PRIMER SORBO" to "POR REGISTRAR TU PRIMER VASO DE AGUA.",
         "FUENTE AMBULANTE" to "TOMA AGUA DURANTE 3 DÍAS SEGUIDOS.",
@@ -134,5 +140,9 @@ fun MyAchievementsScreen() {
         "DETECTOR DE SEQUÍA" to "ACTIVA UNA ALERTA DESPUÉS DE 4 HORAS SIN BEBER AGUA."
 
     )
-    MyAchievements(achievements = achievements)
+
+    MyAchievements(
+        achievements = achievements,
+        achievementStatus = { name -> getAchievementStatus(context, name) }
+    )
 }

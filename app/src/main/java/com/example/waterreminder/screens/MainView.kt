@@ -125,7 +125,7 @@ fun MainView(
                 composable(route = "drinks") {
                     DrinksScreen{ volume ->
                         selectedDrinkVolume = volume.toString()
-                        currentScreen = "main"
+                        currentScreen = "drinks_screen"
                     }
                 }
             }

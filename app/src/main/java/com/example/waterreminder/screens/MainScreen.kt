@@ -28,6 +28,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.waterreminder.achievements.*
 import com.example.waterreminder.R
 
 @Composable
@@ -55,6 +56,13 @@ fun MainScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
+            Text(
+                text = "Agua consumida: $waterConsumed mL",
+                fontSize = 20.sp,
+                color = Color.Black,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
                     .data(mascota)
@@ -104,6 +112,11 @@ fun MainScreen(
                         "¡Genial!, has consumido: $waterConsumed mL",
                         Toast.LENGTH_SHORT
                     ).show()
+
+                    // Verificar y desbloquear logros aquí
+                    if (waterConsumed > 0 && !getAchievementStatus(context, "PRIMER SORBO")){
+                        saveAchievementStatus(context, "PRIMER SORBO", true)
+                        Toast.makeText(context, "¡Logro Desbloqueado: PRIMER SORBO!", Toast.LENGTH_SHORT).show()                    }
                           },
                 modifier = Modifier
                     .padding(10.dp)
