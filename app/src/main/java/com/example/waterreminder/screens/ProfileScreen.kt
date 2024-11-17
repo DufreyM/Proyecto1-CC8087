@@ -34,6 +34,18 @@ import com.example.waterreminder.additionals.factory.viewModelFactory
 import com.example.waterreminder.additionals.injection.MyApp
 import com.example.waterreminder.authentication.presentation.AuthViewModel
 import com.example.waterreminder.viewmodel.ProgressViewModel
+import java.io.File
+import java.io.FileOutputStream
+import android.graphics.BitmapFactory
+import androidx.compose.ui.platform.LocalContext
+import android.content.Context
+import android.graphics.Bitmap
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.launch
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.ui.graphics.asImageBitmap
 
 @Composable
 fun GoalAlertDialog(isGoal: Boolean, goal: Float, onDismiss: () -> Unit) {
@@ -69,7 +81,7 @@ fun ProfileScreen(
     var weight by remember { mutableStateOf("") }
     var height by remember { mutableStateOf("") }
     var isGoal by remember { mutableStateOf(false) }
-    var goal by remember { mutableStateOf(0f) }
+    var goal by remember { mutableFloatStateOf(0f) }
 
     var showCityInput by remember { mutableStateOf(false) }
     var city by remember { mutableStateOf("") }
@@ -77,6 +89,24 @@ fun ProfileScreen(
 
     val profileViewState by authViewModel.profileViewState.collectAsState()
     val userViewState by authViewModel.userViewState.collectAsState()
+
+    var capturedImage by remember { mutableStateOf<Bitmap?>(null) }
+    val context = LocalContext.current
+
+    // Load saved image from internal storage
+    LaunchedEffect(Unit) {
+        val savedImage = loadImageFromStorage(context, "profile_image.png")
+        if (savedImage != null) {
+            capturedImage = savedImage
+        }
+    }
+
+    val takePictureLauncher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicturePreview()) { bitmap ->
+        if (bitmap != null) {
+            capturedImage = bitmap
+            saveImageToStorage(context, bitmap, "profile_image.png")
+        }
+    }
 
     authViewModel.getUserInfo()
 
@@ -120,17 +150,32 @@ fun ProfileScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             // Aquí irá la foto de perfil del usuario
-            Image(
-                painter = painterResource(
-                    id = if(profileViewState.gender == "Mujer") R.drawable.female_user_icon else R.drawable.male_user_icon
-                ),
-                contentDescription = "Avatar",
-                contentScale = ContentScale.Crop,
+            Box(
                 modifier = Modifier
-                    .size(180.dp)
-                    .padding(15.dp)
-                    .clip(shape = CircleShape)
-            )
+                    .size(200.dp)
+                    .clip(CircleShape)
+                    .background(Color.Gray)
+                    .clickable { takePictureLauncher.launch() },
+                contentAlignment = Alignment.Center
+            ) {
+                capturedImage?.let {
+                    Image(
+                        bitmap = it.asImageBitmap(),
+                        contentDescription = "Foto de perfil",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .fillMaxSize()
+                    )
+                } ?: Image(
+                    painter = painterResource(
+                        id = if (profileViewState.gender == "Mujer")
+                            R.drawable.female_user_icon else R.drawable.male_user_icon
+                    ),
+                    contentDescription = "Avatar",
+                    modifier = Modifier
+                        .fillMaxSize()
+                )
+            }
             // Profile Title
             Column(
                 modifier = Modifier.fillMaxWidth(),
@@ -300,4 +345,21 @@ fun ProfileScreen(
 
     GoalAlertDialog(isGoal,goal, onDismiss = { isGoal = false })
 
+}
+
+fun saveImageToStorage(context: Context, bitmap: Bitmap, fileName: String) {
+    val file = File(context.filesDir, fileName)
+    FileOutputStream(file).use { fos ->
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos)
+    }
+}
+
+// Function to load image from internal storage
+fun loadImageFromStorage(context: Context, fileName: String): Bitmap? {
+    val file = File(context.filesDir, fileName)
+    return if (file.exists()) {
+        BitmapFactory.decodeFile(file.absolutePath)
+    } else {
+        null
+        }
 }
