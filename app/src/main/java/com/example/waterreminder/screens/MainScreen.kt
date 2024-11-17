@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.waterreminder.achievements.*
 import com.example.waterreminder.R
+import com.example.waterreminder.viewmodel.ProgressViewModel
 
 @Composable
 fun MainScreen(
@@ -38,7 +39,8 @@ fun MainScreen(
     selectedDrinkVolume: String,
     waterConsumed: Int,
     onIngresarBebidaClick: () -> Unit,
-    onConsumeWater: (Int) -> Unit
+    onConsumeWater: (Int) -> Unit,
+    progressViewModel: ProgressViewModel
 ) {
     val numericVolume = selectedDrinkVolume.replace(" mL", "").toIntOrNull() ?: 0
     val context = LocalContext.current

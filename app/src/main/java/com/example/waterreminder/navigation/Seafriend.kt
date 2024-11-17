@@ -1,5 +1,6 @@
 package com.example.waterreminder.navigation
 
+import com.example.waterreminder.viewmodel.ProgressViewModel
 import androidx.compose.runtime.*
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -9,10 +10,12 @@ import com.example.waterreminder.screens.MainView
 import com.example.waterreminder.screens.SplashScreen
 import com.example.waterreminder.screens.WeatherViewModel
 
+
 @Composable
 fun SeaFriend(
     rootNavController: NavHostController = rememberNavController(),
-    weatherViewModel: WeatherViewModel
+    weatherViewModel: WeatherViewModel,
+    progressViewModel: ProgressViewModel
 ) {
     NavHost(
         navController = rootNavController,
@@ -35,7 +38,8 @@ fun SeaFriend(
         // Navegación de la aplicación central
         composable(route = "main_graph") {
             MainView(
-                weatherViewModel = weatherViewModel
+                weatherViewModel = weatherViewModel,
+                progressViewModel = progressViewModel
             )
         }
     }

@@ -1,5 +1,6 @@
 package com.example.waterreminder.screens
 
+import com.example.waterreminder.viewmodel.ProgressViewModel
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -29,11 +30,13 @@ import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.launch
 import com.example.waterreminder.R
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainView(
     mainNavController: NavHostController = rememberNavController(),
-    weatherViewModel: WeatherViewModel
+    weatherViewModel: WeatherViewModel,
+    progressViewModel: ProgressViewModel
 ) {
     var currentScreen by remember { mutableStateOf("main") }
     var mainMascota by remember { mutableIntStateOf(R.drawable.hipopotamo) }
@@ -43,6 +46,8 @@ fun MainView(
     val activityMonthProgress by remember { mutableFloatStateOf(0.95f) }
     var selectedDrinkVolume by remember { mutableStateOf("100 mL") }
     var waterConsumed by remember { mutableIntStateOf(0) }
+    progressViewModel.actualizarProgresoDia(waterConsumed)
+    progressViewModel.actualizarProgresoMes(waterConsumed)
 
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -95,7 +100,8 @@ fun MainView(
                         onIngresarBebidaClick = { mainNavController.navigate("drinks") },
                         onConsumeWater = { volume ->
                             waterConsumed += volume // Acumular agua consumida
-                        }
+                        },
+                        progressViewModel = progressViewModel
                     )
                 }
 
@@ -107,7 +113,7 @@ fun MainView(
                 }
 
                 composable(route = "profile") {
-                    ProfileScreen(viewModel = weatherViewModel) {}
+                    ProfileScreen(viewModel = weatherViewModel, progressViewModel = ProgressViewModel()) {}
                 }
 
                 composable(route = "mis_logros") {
@@ -115,12 +121,7 @@ fun MainView(
                 }
 
                 composable("mis_estadisticas") {
-                    StatsScreen(
-                        waterDayProgress = waterDayProgress,
-                        waterMonthProgress = waterMonthProgress,
-                        activityDayProgress = activityDayProgress,
-                        activityMonthProgress = activityMonthProgress
-                    )
+                    StatsScreen(progressViewModel)
                 }
 
                 composable(route = "clima") {

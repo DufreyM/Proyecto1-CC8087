@@ -1,5 +1,6 @@
 package com.example.waterreminder.screens
 
+import android.annotation.SuppressLint
 import com.example.waterreminder.R
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -32,9 +33,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.waterreminder.additionals.factory.viewModelFactory
 import com.example.waterreminder.additionals.injection.MyApp
 import com.example.waterreminder.authentication.presentation.AuthViewModel
+import com.example.waterreminder.viewmodel.ProgressViewModel
 
 @Composable
-fun GoalAlertDialog(isGoal: Boolean, goal: Int?, onDismiss: () -> Unit) {
+fun GoalAlertDialog(isGoal: Boolean, goal: Float, onDismiss: () -> Unit) {
     if (isGoal) {
         AlertDialog(
             onDismissRequest = { onDismiss() },
@@ -50,8 +52,10 @@ fun GoalAlertDialog(isGoal: Boolean, goal: Int?, onDismiss: () -> Unit) {
 }
 
 
+@SuppressLint("SuspiciousIndentation")
 @Composable
 fun ProfileScreen(
+    progressViewModel: ProgressViewModel,
     viewModel: WeatherViewModel,
     authViewModel: AuthViewModel = viewModel(
         factory = viewModelFactory { AuthViewModel(MyApp.appModule.authRepository) },
@@ -59,14 +63,13 @@ fun ProfileScreen(
     onSingOut: () -> Unit
 ) {
     var showDialogWeight by remember { mutableStateOf(false) }
-    var showDialogHeight by remember { mutableStateOf(false) }
     var isActivity by remember { mutableStateOf(false) }
     val selectedColor = Color(0xFF009929)
     val unselectedColor = Color(0xFF18C5C7)
     var weight by remember { mutableStateOf("") }
     var height by remember { mutableStateOf("") }
     var isGoal by remember { mutableStateOf(false) }
-    var goal by remember { mutableStateOf(0) }
+    var goal by remember { mutableStateOf(0f) }
 
     var showCityInput by remember { mutableStateOf(false) }
     var city by remember { mutableStateOf("") }
@@ -228,11 +231,14 @@ fun ProfileScreen(
             Button(
                 onClick = {
                     if (isActivity) {
-                    goal = (weight.toDouble() * 35 + 1000).toInt()
+                    goal = (weight.toFloat() * 35 + 1000)
+
                     isGoal = true
+                        progressViewModel.setTotalDia(goal)
                 } else {
-                    goal = (weight.toDouble() * 35).toInt()
+                    goal = (weight.toFloat() * 35)
                     isGoal = true
+                        progressViewModel.setTotalDia(goal)
                 }},
                 modifier = Modifier
                     .fillMaxWidth(0.6f)
@@ -292,6 +298,6 @@ fun ProfileScreen(
         )
     }
 
-    GoalAlertDialog(isGoal,goal,onDismiss = { isGoal = false })
+    GoalAlertDialog(isGoal,goal, onDismiss = { isGoal = false })
 
 }

@@ -1,11 +1,15 @@
 package com.example.waterreminder.screens
 
+
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -13,14 +17,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.res.painterResource
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.waterreminder.R
+import com.example.waterreminder.viewmodel.ProgressViewModel
+
 
 @Composable
 fun StatsScreen(
-    waterDayProgress: Float,
-    waterMonthProgress: Float,
-    activityDayProgress: Float,
-    activityMonthProgress: Float
+    progressViewModel: ProgressViewModel
 ) {
     Column(
         modifier = Modifier
@@ -43,29 +47,25 @@ fun StatsScreen(
 
         ProgressSection(
             title = "AGUA",
-            dayProgress = waterDayProgress,
-            monthProgress = waterMonthProgress,
+            progressViewModel,
             iconRes = R.drawable.ic_water
         )
 
         Spacer(modifier = Modifier.height(48.dp))
 
-        ProgressSection(
-            title = "ACTIVIDAD FÍSICA",
-            dayProgress = activityDayProgress,
-            monthProgress = activityMonthProgress,
-            iconRes = R.drawable.ic_activity
-        )
     }
 }
 
 @Composable
 fun ProgressSection(
     title: String,
-    dayProgress: Float,
-    monthProgress: Float,
+    viewModel: ProgressViewModel,
     iconRes: Int
 ) {
+    // Obtenemos los progresos normalizados desde el ViewModel
+    val dayProgress by viewModel.normalizedDayProgress.collectAsStateWithLifecycle(0f)
+    val monthProgress by viewModel.normalizedMonthProgress.collectAsStateWithLifecycle(0f)
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
@@ -85,11 +85,13 @@ fun ProgressSection(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
+            // Progress diario
             ProgressCircle(
                 progress = dayProgress,
                 label = "Meta del día"
             )
 
+            // Progress mensual
             ProgressCircle(
                 progress = monthProgress,
                 label = "Meta del mes"
@@ -111,6 +113,7 @@ fun ProgressSection(
         }
     }
 }
+
 
 @Composable
 fun ProgressCircle(
