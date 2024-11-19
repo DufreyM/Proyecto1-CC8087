@@ -46,6 +46,7 @@ import androidx.activity.result.launch
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.ui.graphics.asImageBitmap
+import com.example.waterreminder.PreferencesManager
 
 @Composable
 fun GoalAlertDialog(isGoal: Boolean, goal: Float, onDismiss: () -> Unit) {
@@ -67,6 +68,7 @@ fun GoalAlertDialog(isGoal: Boolean, goal: Float, onDismiss: () -> Unit) {
 @SuppressLint("SuspiciousIndentation")
 @Composable
 fun ProfileScreen(
+    preferencesManager: PreferencesManager,
     progressViewModel: ProgressViewModel,
     viewModel: WeatherViewModel,
     authViewModel: AuthViewModel = viewModel(
@@ -81,7 +83,8 @@ fun ProfileScreen(
     var weight by remember { mutableStateOf("") }
     var height by remember { mutableStateOf("") }
     var isGoal by remember { mutableStateOf(false) }
-    var goal by remember { mutableFloatStateOf(0f) }
+    var goal by remember { mutableFloatStateOf(preferencesManager.goal) }
+
 
     var showCityInput by remember { mutableStateOf(false) }
     var city by remember { mutableStateOf("") }
@@ -273,27 +276,38 @@ fun ProfileScreen(
             }
 
             // Calcular Meta Button
+            // Calcular Meta Button
             Button(
                 onClick = {
-                    if (isActivity) {
-                    goal = (weight.toFloat() * 35 + 1000)
+                    // Realizar el cálculo basado en el peso y actividad física
+                    val calculatedGoal = if (isActivity) {
+                        weight.toFloat() * 35 + 1000
+                    } else {
+                        weight.toFloat() * 35
+                    }
 
+                    // Actualizar el estado local
+                    goal = calculatedGoal
                     isGoal = true
-                        progressViewModel.setTotalDia(goal)
-                } else {
-                    goal = (weight.toFloat() * 35)
-                    isGoal = true
-                        progressViewModel.setTotalDia(goal)
-                }},
+
+                    // Guardar la meta en las preferencias
+                    preferencesManager.goal = calculatedGoal
+                    progressViewModel.setTotalDia(calculatedGoal)
+                },
                 modifier = Modifier
                     .fillMaxWidth(0.6f)
                     .height(50.dp),
                 shape = RoundedCornerShape(20.dp),
-                colors = ButtonColors(containerColor = Color(0xFF18C5C7), contentColor = Color.White, disabledContentColor = Color.White, disabledContainerColor = Color.Blue)
-
+                colors = ButtonColors(
+                    containerColor = Color(0xFF18C5C7),
+                    contentColor = Color.White,
+                    disabledContentColor = Color.White,
+                    disabledContainerColor = Color.Blue
+                )
             ) {
                 Text(text = "⚡ Calcular Meta", fontSize = 18.sp)
             }
+
 
             // Cerra Sesión Button
             Button(

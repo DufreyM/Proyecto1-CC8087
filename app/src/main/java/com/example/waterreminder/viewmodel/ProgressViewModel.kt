@@ -12,8 +12,8 @@ class ProgressViewModel : ViewModel() {
     private val _dayTotal = MutableStateFlow(3000f) // Total diario (meta) sigue siendo Float
 
     val dayProgress = _dayProgress.asStateFlow() // Exposición del progreso del día
-    val dayTotal = _dayTotal.asStateFlow() // Exposición del total del día
-
+        val dayTotal = _dayTotal.asStateFlow() // Exposición del total del día
+    
     // Progreso y total mensual
     private val _monthProgress = MutableStateFlow(0) // Progreso acumulado del mes (ahora es Int)
     private val _monthTotal = MutableStateFlow(90000f) // Total mensual (meta) 30 * 3000 ml

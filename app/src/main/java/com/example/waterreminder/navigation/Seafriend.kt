@@ -6,6 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.waterreminder.PreferencesManager
 import com.example.waterreminder.screens.MainView
 import com.example.waterreminder.screens.SplashScreen
 import com.example.waterreminder.screens.WeatherViewModel
@@ -15,7 +16,8 @@ import com.example.waterreminder.screens.WeatherViewModel
 fun SeaFriend(
     rootNavController: NavHostController = rememberNavController(),
     weatherViewModel: WeatherViewModel,
-    progressViewModel: ProgressViewModel
+    progressViewModel: ProgressViewModel,
+    preferencesManager: PreferencesManager
 ) {
     NavHost(
         navController = rootNavController,
@@ -39,7 +41,8 @@ fun SeaFriend(
         composable(route = "main_graph") {
             MainView(
                 weatherViewModel = weatherViewModel,
-                progressViewModel = progressViewModel
+                progressViewModel = progressViewModel,
+                preferencesManager = preferencesManager
             )
         }
     }

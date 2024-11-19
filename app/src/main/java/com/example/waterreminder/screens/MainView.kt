@@ -27,6 +27,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.waterreminder.PreferencesManager
 import kotlinx.coroutines.launch
 import com.example.waterreminder.R
 
@@ -36,19 +37,19 @@ import com.example.waterreminder.R
 fun MainView(
     mainNavController: NavHostController = rememberNavController(),
     weatherViewModel: WeatherViewModel,
-    progressViewModel: ProgressViewModel
+    progressViewModel: ProgressViewModel,
+    preferencesManager: PreferencesManager
 ) {
     var currentScreen by remember { mutableStateOf("main") }
-    var mainMascota by remember { mutableIntStateOf(R.drawable.hipopotamo) }
     val waterDayProgress by remember { mutableFloatStateOf(0.70f) }
     val waterMonthProgress by remember { mutableFloatStateOf(0.95f) }
     val activityDayProgress by remember { mutableFloatStateOf(0.50f) }
     val activityMonthProgress by remember { mutableFloatStateOf(0.95f) }
     var selectedDrinkVolume by remember { mutableStateOf("100 mL") }
-    var waterConsumed by remember { mutableIntStateOf(0) }
+    var waterConsumed by remember { mutableIntStateOf(preferencesManager.waterConsumed) } // Cargar desde las preferencias
     progressViewModel.actualizarProgresoDia(waterConsumed)
     progressViewModel.actualizarProgresoMes(waterConsumed)
-
+    var mainMascota by remember { mutableIntStateOf(preferencesManager.mainMascota) } // Valor inicial
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
@@ -100,20 +101,23 @@ fun MainView(
                         onIngresarBebidaClick = { mainNavController.navigate("drinks") },
                         onConsumeWater = { volume ->
                             waterConsumed += volume // Acumular agua consumida
+                            preferencesManager.waterConsumed = waterConsumed // Guardar en preferencias
                         },
                         progressViewModel = progressViewModel
                     )
                 }
 
                 composable(route = "mascota") {
-                    MascotaScreen { selectedMascota ->
+                    MascotaScreen(preferencesManager) { selectedMascota ->
                         mainMascota = selectedMascota
+                        preferencesManager.mainMascota = selectedMascota
+
                         currentScreen = "main"
                     }
                 }
 
                 composable(route = "profile") {
-                    ProfileScreen(viewModel = weatherViewModel, progressViewModel = ProgressViewModel()) {}
+                    ProfileScreen(viewModel = weatherViewModel, progressViewModel = ProgressViewModel(), preferencesManager = preferencesManager) {}
                 }
 
                 composable(route = "mis_logros") {

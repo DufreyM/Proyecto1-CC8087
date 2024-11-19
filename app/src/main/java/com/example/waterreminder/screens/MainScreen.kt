@@ -40,10 +40,12 @@ fun MainScreen(
     waterConsumed: Int,
     onIngresarBebidaClick: () -> Unit,
     onConsumeWater: (Int) -> Unit,
-    progressViewModel: ProgressViewModel
+    progressViewModel: ProgressViewModel,
+
 ) {
     val numericVolume = selectedDrinkVolume.replace(" mL", "").toIntOrNull() ?: 0
     val context = LocalContext.current
+
 
     Box(
         modifier = modifier.fillMaxSize()

@@ -16,6 +16,7 @@ class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.P)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val preferencesManager = PreferencesManager(this)
 
         // Crear ViewModel y manejar errores potenciales de inicialización
         try {
@@ -25,7 +26,8 @@ class MainActivity : ComponentActivity() {
             setContent {
                 val progressViewModel: ProgressViewModel = viewModel()
 
-                SeaFriend(weatherViewModel= weatherViewModel, progressViewModel = progressViewModel)
+
+                SeaFriend(weatherViewModel= weatherViewModel, progressViewModel = progressViewModel, preferencesManager = preferencesManager)
             }
         } catch (e: Exception) {
             e.printStackTrace()

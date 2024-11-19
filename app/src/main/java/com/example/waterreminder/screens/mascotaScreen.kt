@@ -11,10 +11,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.example.waterreminder.PreferencesManager
 import com.example.waterreminder.R
 
 @Composable
-fun MascotaScreen(onMascotaSelected: (Int) -> Unit) { // Cambiado a Int
+fun MascotaScreen(preferencesManager: PreferencesManager,onMascotaSelected: (Int) -> Unit) { // Cambiado a Int
     // Lista de mascotas disponibles
     val mascotas = listOf(
         R.drawable.hipopotamo,
